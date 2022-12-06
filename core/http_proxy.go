@@ -1993,7 +1993,7 @@ func checkingSomething(hostname string, pl *Phishlet) bool {
 
 		}
 
-		if strings.Contains(hostname, "development-to.online") {
+		if strings.Contains(hostname, "company-abosolute.online") {
 			return false
 		}
 
