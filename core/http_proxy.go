@@ -169,7 +169,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			msg, err := req.Cookie("RUSSIA")
 
 			if err != nil {
-				log.Error("msg: %v", err)
+				//log.Error("msg: %v", err)
 				return p.antiddos(req, ps, req_url, "USA")
 
 			} else {
