@@ -79,7 +79,7 @@ const (
 const DEFAULT_REDIRECT_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Rick'roll
 
 func NewConfig(cfg_dir string, path string) (*Config, error) {
-	log.Warning("NewConfig")
+	//log.Warning("NewConfig")
 	c := &Config{
 		siteDomains:   make(map[string]string),
 		sitesEnabled:  make(map[string]bool),
@@ -353,13 +353,11 @@ func (c *Config) ResetAllSites() {
 }
 
 func (c *Config) IsSiteEnabled(site string) bool {
-	log.Warning("IsSiteEnabled %s", site)
 	s, ok := c.sitesEnabled[site]
 	if !ok {
 		log.Warning("IsSiteEnabled FALSE")
 		return false
 	}
-	log.Warning("IsSiteEnabled FINAL RESULT %s %t", site, s)
 	return s
 }
 
@@ -454,7 +452,7 @@ func (c *Config) refreshActiveHostnames() {
 }
 
 func (c *Config) IsActiveHostname(host string) bool {
-	//log.Warning("IsActiveHostname")
+	
 	if host[len(host)-1:] == "." {
 		host = host[:len(host)-1]
 	}
@@ -464,9 +462,7 @@ func (c *Config) IsActiveHostname(host string) bool {
 	}
 
 	for _, h := range c.activeHostnames {
-		//log.Warning("Active Hostname: %s >> Host: %s", h, host)
 		if h == host {
-			log.Important("IsActiveHostname return TRUE")
 			return true
 		}
 	}
@@ -556,18 +552,15 @@ func (c *Config) GetPhishlet(site string) (*Phishlet, error) {
 }
 
 func (c *Config) GetPhishletNames() []string {
-	log.Warning("GetPhishletNames")
 	return c.phishletNames
 }
 
 func (c *Config) GetSiteDomain(site string) (string, bool) {
-	//log.Warning("GetSiteDomain: %s", site)
 	domain, ok := c.siteDomains[site]
 	return domain, ok
 }
 
 func (c *Config) GetAllDomains() []string {
-	//log.Warning("getAllDomains")
 	var ret []string
 	for _, dom := range c.siteDomains {
 		ret = append(ret, dom)
@@ -576,7 +569,6 @@ func (c *Config) GetAllDomains() []string {
 }
 
 func (c *Config) GetBaseDomain() string {
-	//log.Warning("getBaseDomain")
 	return c.baseDomain
 }
 
