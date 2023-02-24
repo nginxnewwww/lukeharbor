@@ -355,7 +355,7 @@ func (c *Config) ResetAllSites() {
 func (c *Config) IsSiteEnabled(site string) bool {
 	s, ok := c.sitesEnabled[site]
 	if !ok {
-		log.Warning("IsSiteEnabled FALSE")
+		//log.Warning("IsSiteEnabled FALSE")
 		return false
 	}
 	return s
