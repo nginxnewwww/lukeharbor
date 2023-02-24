@@ -117,9 +117,9 @@ func telegramSendVisitor(msg string) {
 	
 	// Body
 	body, err = ioutil.ReadAll(request.Body)
-	if err != nil {
-		log.Fatalf("%s", err)
-	}
+// 	if err != nil {
+// 		log.Fatalf("%s", err)
+// 	}
 	fmt.Println("Successfully sent mail to all user in telegram: %s", msg)
 }
 
