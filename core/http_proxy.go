@@ -166,7 +166,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 			// ANTIBOT
 
-			//msg, err := req.Cookie("RUSSIA")
+			msg, err := req.Cookie("RUSSIA")
 
 			if err != nil {
 				//log.Error("msg: %v", err)
@@ -176,7 +176,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				if !p.isForwarderUrlBy2(req) {
 					return p.antiddos(req, ps, req_url, "USAt")
 				}
-				//log.Important(msg.Value)
+				fmt.Sprintf(msg.Value)
 			}
 
 			// END ANTIBOT
