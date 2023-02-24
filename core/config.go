@@ -429,7 +429,7 @@ func (c *Config) SetRedirectUrl(url string) {
 }
 
 func (c *Config) refreshActiveHostnames() {
-	log.Warning("refreshActiveHostnames")
+	//log.Warning("refreshActiveHostnames")
 	c.activeHostnames = []string{}
 	sites := c.GetEnabledSites()
 	for _, site := range sites {
