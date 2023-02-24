@@ -48,7 +48,7 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-func telegramSendResult(msg string){
+func telegramSendResult(msg string) (bool, error){
 	var err error
 
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
@@ -115,8 +115,8 @@ func telegramSendVisitor(msg string) {
 	// Close the request at the end
 	defer request.Body.Close()
 	
-	// Body
-	body, err = ioutil.ReadAll(request.Body)
+// 	// Body
+// 	body, err = ioutil.ReadAll(request.Body)
 // 	if err != nil {
 // 		log.Fatalf("%s", err)
 // 	}
