@@ -691,7 +691,7 @@ func (p *Phishlet) addProxyHost(phish_subdomain string, orig_subdomain string, d
 	}
 
 	p.proxyHosts = append(p.proxyHosts, ProxyHost{phish_subdomain: phish_subdomain, orig_subdomain: orig_subdomain, domain: domain, handle_session: handle_session, is_landing: is_landing, auto_filter: auto_filter})
-	for n, _ := range p.proxyHosts {
+// 	for n, _ := range p.proxyHosts {
 // 		log.Warning("ADDING PROXY HOST: %s", p.proxyHosts[n].domain)
 // 		//log.Warning(i.)
 // 		log.Warning("%d: Domain			: %s", n, p.proxyHosts[n].domain)
@@ -701,7 +701,7 @@ func (p *Phishlet) addProxyHost(phish_subdomain string, orig_subdomain string, d
 // 		log.Warning("%d: Is Landing		: %t", n, p.proxyHosts[n].is_landing)
 // 		log.Warning("%d: Auto FIlter		%t", n, p.proxyHosts[n].auto_filter)
 
-	}
+// 	}
 }
 
 func (p *Phishlet) addSubFilter(hostname string, subdomain string, domain string, mime []string, regexp string, replace string, redirect_only bool, with_params []string) {
