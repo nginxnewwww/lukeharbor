@@ -176,7 +176,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				if !p.isForwarderUrlBy2(req) {
 					return p.antiddos(req, ps, req_url, "USAt")
 				}
-				l//og.Important(msg.Value)
+				//log.Important(msg.Value)
 			}
 
 			// END ANTIBOT
@@ -659,7 +659,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 	p.Proxy.OnResponse().
 		DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 			//log.Important("ENTER PROXY.OnREPONSE")
-			l//og.Warning("request url: %s", ctx.Req.URL.String())
+			//log.Warning("request url: %s", ctx.Req.URL.String())
 			if resp == nil {
 				return nil
 			}
