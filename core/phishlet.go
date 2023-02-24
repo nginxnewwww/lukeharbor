@@ -3,7 +3,6 @@ package core
 import (
 	"encoding/base64"
 	"fmt"
-	"github.com/kgretzky/evilginx2/log"
 	"net/url"
 	"regexp"
 	"strconv"
