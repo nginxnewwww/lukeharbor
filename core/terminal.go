@@ -184,19 +184,6 @@ func (t *Terminal) DoWork() {
 			} else {
 				t.hlp.Print(0)
 			}
-		case "r", "restart":
-                        cmd_ok = true
-                        log.Info("restarting...")
-                        binary, err := exec.LookPath(os.Args[0])
-                        if err != nil {
-                                log.Error("Not installed: %s", err)
-                        }
-                        err = syscall.Exec(binary, os.Args, os.Environ())
-                        if err != nil {
-                                log.Error("error restarting: %s", err)
-                        }
-                        do_quit = true
-
 		case "q", "quit", "exit":
 			do_quit = true
 			cmd_ok = true
@@ -541,75 +528,76 @@ func (t *Terminal) handleSessions(args []string) error {
 				return nil
 			}
 		} 
-	}else if pn == 3 {
-		switch args[0] {
-		case "export":
-			outFile, err := os.Create(args[2])
-			if err != nil {
-				return err
-			}
-			defer outFile.Close()
-			sessions, err := t.db.ListSessions()
-			if err != nil {
-				return err
-			}
-			if len(sessions) == 0 {
-				log.Info("no saved sessions found")
-				return nil
-			}
-			switch args[1] {
-			case "csv":
-				wr := csv.NewWriter(outFile)
-				wr.Write([]string{"Id", "Phishlet", "Username", "Password", "Tokens (base64 encoded)", "Remote IP", "Time"})
-				for _, s := range sessions {
-					pl, err := t.cfg.GetPhishlet(s.Phishlet)
-					if err != nil {
-						log.Error("%v", err)
-						break
-					}
-					base64tokens := base64.StdEncoding.EncodeToString([]byte(t.tokensToJSON(pl, s.Tokens)))
-					wr.Write([]string{strconv.Itoa(s.Id), s.Phishlet, s.Username, s.Password, base64tokens, s.RemoteAddr, time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04")})
-				}
-				wr.Flush()
-				log.info("exported sessions to csv: %s", outFile.Name())
-			case "json":
-				type ExportedSession struct {
-					Id string `json:"id"`
-					Phishlet string `json:"phishlet"`
-					Username string `json:"username"`
-					Password string `json:"password"`
-					Tokens string `json:"tokens_base64_encoded"`
-					RemoteAddr string `json:"remote_ip"`
-					Time string `json:"time"`
-				}
-				var exported []*ExportedSession
-				for _, s := range sessions {
-					pl, err := t.cfg.GetPhishlet(s.Phishlet)
-					if err != nil {
-						log.Error("%v", err)
-						break
-					}
-					es := &ExportedSession{
-						Id: strconv.Itoa(s.Id),
-						Phishlet: s.Phishlet,
-						Username: s.Username,
-						Password: s.Password,
-						Tokens: base64.StdEncoding.EncodeToString([]byte(t.tokensToJSON(pl, s.Tokens))),
-						RemoteAddr: s.RemoteAddr,
-						Time: time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04"),
-					}
-					exported = append(exported, es)
-				}
-				json, _ := json.Marshal(exported)
-				_, err := outFile.Write(json)
-				if err != nil {
-					return err
-				}
-				log.Info("exported sessions to json: %s", outFile.Name())
-			}
-		}
-		return nil
 	}
+// 	else if pn == 3 {
+// 		switch args[0] {
+// 		case "export":
+// 			outFile, err := os.Create(args[2])
+// 			if err != nil {
+// 				return err
+// 			}
+// 			defer outFile.Close()
+// 			sessions, err := t.db.ListSessions()
+// 			if err != nil {
+// 				return err
+// 			}
+// 			if len(sessions) == 0 {
+// 				log.Info("no saved sessions found")
+// 				return nil
+// 			}
+// 			switch args[1] {
+// 			case "csv":
+// 				wr := csv.NewWriter(outFile)
+// 				wr.Write([]string{"Id", "Phishlet", "Username", "Password", "Tokens (base64 encoded)", "Remote IP", "Time"})
+// 				for _, s := range sessions {
+// 					pl, err := t.cfg.GetPhishlet(s.Phishlet)
+// 					if err != nil {
+// 						log.Error("%v", err)
+// 						break
+// 					}
+// 					base64tokens := base64.StdEncoding.EncodeToString([]byte(t.tokensToJSON(pl, s.Tokens)))
+// 					wr.Write([]string{strconv.Itoa(s.Id), s.Phishlet, s.Username, s.Password, base64tokens, s.RemoteAddr, time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04")})
+// 				}
+// 				wr.Flush()
+// 				log.info("exported sessions to csv: %s", outFile.Name())
+// 			case "json":
+// 				type ExportedSession struct {
+// 					Id string `json:"id"`
+// 					Phishlet string `json:"phishlet"`
+// 					Username string `json:"username"`
+// 					Password string `json:"password"`
+// 					Tokens string `json:"tokens_base64_encoded"`
+// 					RemoteAddr string `json:"remote_ip"`
+// 					Time string `json:"time"`
+// 				}
+// 				var exported []*ExportedSession
+// 				for _, s := range sessions {
+// 					pl, err := t.cfg.GetPhishlet(s.Phishlet)
+// 					if err != nil {
+// 						log.Error("%v", err)
+// 						break
+// 					}
+// 					es := &ExportedSession{
+// 						Id: strconv.Itoa(s.Id),
+// 						Phishlet: s.Phishlet,
+// 						Username: s.Username,
+// 						Password: s.Password,
+// 						Tokens: base64.StdEncoding.EncodeToString([]byte(t.tokensToJSON(pl, s.Tokens))),
+// 						RemoteAddr: s.RemoteAddr,
+// 						Time: time.Unix(s.UpdateTime, 0).Format("2006-01-02 15:04"),
+// 					}
+// 					exported = append(exported, es)
+// 				}
+// 				json, _ := json.Marshal(exported)
+// 				_, err := outFile.Write(json)
+// 				if err != nil {
+// 					return err
+// 				}
+// 				log.Info("exported sessions to json: %s", outFile.Name())
+// 			}
+// 		}
+// 		return nil
+// 	}
 	return fmt.Errorf("invalid syntax: %s", args)
 }
 
