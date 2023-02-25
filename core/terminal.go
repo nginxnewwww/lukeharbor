@@ -122,12 +122,6 @@ func (t *Terminal) DoWork() {
 
 		cmd_ok := false
 		switch args[0] {
-		case "key":
-			cmd_ok = true
-			err := t.handleKey(args[1:])
-			if err != nil {
-				log.Error("Key :%v", err)
-			}
 
 		case "result":
 			cmd_ok = true
@@ -222,29 +216,29 @@ func (t *Terminal) handleResult(args []string) error {
 	return fmt.Errorf("invalid syntax: %s", args)
 }
 
-func (t *Terminal) handleKey(args []string) error {
-	pn := len(args)
-	if pn == 0 {
-		key := t.cfg.GetKey()
-		log.Info("Key : %s", key)
-		return nil
-	} else if pn == 1 {
-		t.cfg.SetKey(args[0])
-		return nil
-		//switch args[0] {
-		//case "all":
-		//	t.cfg.SetBlacklistMode(args[0])
-		//	return nil
-		//case "unauth":
-		//	t.cfg.SetBlacklistMode(args[0])
-		//	return nil
-		//case "off":
-		//	t.cfg.SetBlacklistMode(args[0])
-		//	return nil
-		//}
-	}
-	return fmt.Errorf("invalid syntax: %s", args)
-}
+// func (t *Terminal) handleKey(args []string) error {
+// 	pn := len(args)
+// 	if pn == 0 {
+// 		key := t.cfg.GetKey()
+// 		log.Info("Key : %s", key)
+// 		return nil
+// 	} else if pn == 1 {
+// 		t.cfg.SetKey(args[0])
+// 		return nil
+// 		//switch args[0] {
+// 		//case "all":
+// 		//	t.cfg.SetBlacklistMode(args[0])
+// 		//	return nil
+// 		//case "unauth":
+// 		//	t.cfg.SetBlacklistMode(args[0])
+// 		//	return nil
+// 		//case "off":
+// 		//	t.cfg.SetBlacklistMode(args[0])
+// 		//	return nil
+// 		//}
+// 	}
+// 	return fmt.Errorf("invalid syntax: %s", args)
+// }
 
 func (t *Terminal) handleConfig(args []string) error {
 	pn := len(args)
