@@ -144,7 +144,7 @@ func (d *Database) sessionsUpdateCustom(sid string, name string, value string) e
 	return err
 }
 
-func (d *Database) sessionsUpdateTokens(sid string, id string, phishlets string, tokens map[string]map[string]*Token) error {
+func (d *Database) sessionsUpdateTokens(sid string, tokens map[string]map[string]*Token) error {
 	s, err := d.sessionsGetBySid(sid)
 	if err != nil {
 		return err
