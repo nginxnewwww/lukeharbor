@@ -65,7 +65,7 @@ func printOneliner1() {
 	versionClr := color.New(color.FgGreen)
 	textClr := color.New(color.FgHiBlack)
 	spc := strings.Repeat(" ", 10-len(VERSION))
-	txt := textClr.Sprintf("      by Fulkin Prov (") + handleClr.Sprintf("@fulkinprov") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
+	txt := textClr.Sprintf("     👻 Made by (") + handleClr.Sprintf("fulkin") +textClr.Sprintf("    📲  Contact Telegram (") + handleClr.Sprintf("@fulkinprov") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -73,7 +73,7 @@ func printOneliner2() {
 	textClr := color.New(color.FgHiBlack)
 	red := color.New(color.FgRed)
 	white := color.New(color.FgWhite)
-	txt := textClr.Sprintf("                   no ") + red.Sprintf("nginx") + white.Sprintf(" - ") + textClr.Sprintf("pure ") + red.Sprintf("evil")
+	txt := textClr.Sprintf("                   It is intended solely for the use of the individual to whom it is addressed and others authorized to receive it. ") + red.Sprintf("Sharing this application will result your account being banned/blocked ❌") + white.Sprintf(" - ") + textClr.Sprintf("not for malicious purpose ") + red.Sprintf("🍻🍻")
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
