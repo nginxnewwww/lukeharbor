@@ -42,6 +42,7 @@ func NewWhitelist(path string, dbPath string) (*Whitelist, error, *geoip2.Reader
 		}
 	}
 	log.Info("country whitelist: loaded %d country code", len(wl.countries))
+	wl.file_path = path 
 	return wl, nil, db
 }
 
