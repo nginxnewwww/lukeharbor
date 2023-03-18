@@ -56,7 +56,7 @@ func printLogo(s string) {
 
 func printUpdateName() {
 	nameClr := color.New(color.FgHiRed)
-	txt := nameClr.Sprintf("                 - --  Gone Phishing  -- -")
+	txt := nameClr.Sprintf("                 - --  MITM 2FA/COOKIES BYPASS  -- -")
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -65,7 +65,7 @@ func printOneliner1() {
 	versionClr := color.New(color.FgGreen)
 	textClr := color.New(color.FgHiBlack)
 	spc := strings.Repeat(" ", 10-len(VERSION))
-	txt := textClr.Sprintf("     👻 Made by (") + handleClr.Sprintf("fulkin") +textClr.Sprintf("    📲  Contact Telegram (") + handleClr.Sprintf("@fulkinprov") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
+	txt := textClr.Sprintf("     👻 Made by (") + handleClr.Sprintf("FULKIN GINX") + textClr.Sprintf(")") +textClr.Sprintf("  📲  Contact Telegram (") + handleClr.Sprintf("@fulkinginxx") + textClr.Sprintf(")") + spc + textClr.Sprintf("version ") + versionClr.Sprintf("%s", VERSION)
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -104,8 +104,8 @@ func Banner() {
 	printUpdateName()
 	fmt.Println()
 	putAsciiArt("    @@@@@@WW@@@WW@@WWW@@WW@@@WW@@@@@@    \n")
-	//printOneliner2()
-	//fmt.Println()
+	printOneliner2()
+	fmt.Println()
 	putAsciiArt("_   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   _")
 	printOneliner1()
 	fmt.Println()
