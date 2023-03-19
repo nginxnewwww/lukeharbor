@@ -73,7 +73,7 @@ func printOneliner2() {
 	textClr := color.New(color.FgHiBlack)
 	red := color.New(color.FgRed)
 	white := color.New(color.FgWhite)
-	txt := textClr.Sprintf("                   It is intended solely for the use of the individual to whom it is addressed and others authorized to receive it. ") + red.Sprintf("Sharing this application will result your account being banned/blocked ❌") + white.Sprintf(" - ") + textClr.Sprintf("not for malicious purpose ") + red.Sprintf("🍻🍻")
+	txt := textClr.Sprintf("                   It is intended solely for the use of the authorized individual. ") + red.Sprintf("Sharing this application will result your account being banned/blocked ❌") + white.Sprintf(" - ") + textClr.Sprintf("not for malicious purpose ") + red.Sprintf("🍻🍻")
 	fmt.Fprintf(color.Output, "%s", txt)
 }
 
@@ -103,9 +103,11 @@ func Banner() {
 	putAsciiArt("     @@@@@WW@@@WW@@WWW@@WW@@@WW@@@@@     ")
 	printUpdateName()
 	fmt.Println()
-	putAsciiArt("    @@@@@@WW@@@WW@@WWW@@WW@@@WW@@@@@@    \n")
 	printOneliner2()
 	fmt.Println()
+	putAsciiArt("    @@@@@@WW@@@WW@@WWW@@WW@@@WW@@@@@@    \n")
+	//printOneliner2()
+	//fmt.Println()
 	putAsciiArt("_   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   _")
 	printOneliner1()
 	fmt.Println()
